@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".MainActivity">
+
+
+    <!--    title of location or city starts -->
+    <TextView
+        android:id="@+id/tv_location_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Location"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--    title of location or city ends -->
+
+
+    <!--    container of today weather starts -->
+    <LinearLayout
+        android:id="@+id/ll_container_today_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_location_title">
+
+        <ImageView
+            android:id="@+id/iv_weather_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_the_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="current temp" />
+
+            <TextView
+                android:id="@+id/tv_weather_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="weather state" />
+
+            <TextView
+                android:id="@+id/tv_max_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="max temp" />
+
+            <TextView
+                android:id="@+id/tv_min_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="min temp" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--    container of today weather ends -->
+
+
+    <!--    header of future weather starts -->
+    <LinearLayout
+        android:id="@+id/ll_header_future_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@id/ll_container_today_weather">
+
+        <TextView
+            android:id="@+id/tv_header_day"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="day"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_header_weather"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="weather"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_header_high_low"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="high/low"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    <!--    header of future weather ends -->
+
+
+    <!--    container of future weather starts -->
+    <LinearLayout
+        android:id="@+id/ll_future_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@id/ll_header_future_weather">
+
+        <TextView
+            android:id="@+id/tv_tomorrow_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="tomorrow" />
+
+        <ImageView
+            android:id="@+id/iv_tomorrow_weather_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="icon" />
+
+        <TextView
+            android:id="@+id/tv_tomorrow_weather_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="status" />
+
+        <TextView
+            android:id="@+id/tv_tomorrow_high_low"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="20'/0'" />
+
+    </LinearLayout>
+    <!--    container of future weather ends -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
