@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.ban.weather.databinding.ActivityMainBinding
 import com.ban.weather.view_models.MainViewModel
+import com.ban.weather.view_models.MainViewModelFactory
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
@@ -15,8 +16,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
 
-//    private lateinit var viewModel : MainViewModel
-    private val viewModel = MainViewModel()
+    // View Model
+    private val mainViewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,12 +29,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        viewModel.weather.observe(this, {
+        mainViewModel.weather.observe(this, {
             Log.d(TAG, "[observe] ${it.title}")
             updateView(it)
         })
 
-        viewModel.getWeather(1118370)
+        mainViewModel.getWeather(1118370) // Example:Tokyo
 
     }
 
