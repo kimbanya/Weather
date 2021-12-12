@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import com.ban.weather.databinding.ActivityMainBinding
 import com.ban.weather.view_models.MainViewModel
