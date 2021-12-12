@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             updateView(it)
         })
 
-        viewModel.getWeather(44418)
+        viewModel.getWeather(1118370)
 
     }
 
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         maxTemp.text = "High temp : ${result!!.consolidatedWeather[0].maxTemp.toInt().toString()}'"
         minTemp.text = "Low temp : ${result!!.consolidatedWeather[0].minTemp.toInt().toString()}'"
 
-        tomorrowDay.text = "${localDate.month} ${localDate.dayOfMonth}"
+        tomorrowDay.text = "${localDate.plusDays(1)}"
 //        tomorrowWeatherIcon. = result!!.consolidatedWeather[1].weatherStateAbbr
         tomorrowWeatherStatus.text = result!!.consolidatedWeather[1].weatherStateName
         tomorrowHighLow.text = "${result!!.consolidatedWeather[1].maxTemp.toInt().toString()}'/${result!!.consolidatedWeather[1].minTemp.toInt().toString()}'"

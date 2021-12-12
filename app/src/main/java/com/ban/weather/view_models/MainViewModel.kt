@@ -16,15 +16,12 @@ class MainViewModel : ViewModel() {
 
     val weather = MutableLiveData<WeatherResponseModel>()
 
-    // lateinit 과 차이?
-    private val retrofit: ApiInterface by lazy {
-        ApiInterface.create()
-    }
+    private val repository: MainRepository by lazy { MainRepository() }
 
     fun getWeather(woeid: Long) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val response = retrofit.getWeatherById(woeid) // woeid.toString()
+                val response = repository.getCityWeather(woeid) // woeid.toString()
                 if (response.isSuccessful) {
                     Log.d(TAG, "[getCityWeather]")
                     weather.postValue(response.body())
