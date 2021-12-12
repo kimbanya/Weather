@@ -43,7 +43,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
 }
 
 class MainViewModelFactory(private val repository: MainRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MainViewModel(repository) as T

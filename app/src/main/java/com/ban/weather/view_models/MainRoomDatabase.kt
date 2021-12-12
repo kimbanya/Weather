@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 import com.ban.weather.models.CityInfo
 
 @Database(entities = [CityInfo::class], version = 1)
-@TypeConverters(Converters::class)
+@TypeConverters
 abstract class MainRoomDatabase : RoomDatabase() {
 
     abstract fun mainDao() : MainDao
