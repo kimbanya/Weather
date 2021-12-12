@@ -3,6 +3,15 @@ package com.ban.weather
 import com.google.gson.annotations.SerializedName
 
 
+data class SearchCityResponseModel(
+    val title : String,
+    val woeid : Int,
+    @SerializedName("latt_long")
+    val lattLong : String,
+    @SerializedName("location_type")
+    val locationType : String
+)
+
 data class WeatherResponseModel(
     @SerializedName("consolidated_weather")
     val consolidatedWeather: List<ConsolidatedWeatherModel>,
@@ -25,7 +34,7 @@ data class WeatherResponseModel(
     @SerializedName("location_type")
     val locationType: String,
 
-    val woeid: Long,
+    val woeid: Int,
 
     @SerializedName("latt_long")
     val lattLong: String,
@@ -82,7 +91,7 @@ data class Parent(
     @SerializedName("location_type")
     val locationType: String,
 
-    val woeid: Long,
+    val woeid: Int,
 
     @SerializedName("latt_long")
     val lattLong: String
