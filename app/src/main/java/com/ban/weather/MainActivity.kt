@@ -1,18 +1,17 @@
 package com.ban.weather
 
+import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import com.ban.weather.databinding.ActivityMainBinding
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
@@ -41,6 +40,12 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.getWeather(1118370) // Example:Tokyo
 
+        binding.fbaAddCityButton.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java).apply {
+                putExtra("test", "TEST MESSAGE using Intent")
+            }
+            startActivity(intent)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
