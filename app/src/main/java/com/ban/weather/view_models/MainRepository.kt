@@ -15,7 +15,7 @@ class MainRepository(private val mainDao: MainDao) {
 
     // Server
     suspend fun getCityWeather(woeid: Int) = apiInterface.getWeatherById(woeid)
-
+    suspend fun getCityNames(cityName: String) = apiInterface.getCityNameByName(cityName)
 
     // DB
     @Suppress("RedundantSuspendModifier")

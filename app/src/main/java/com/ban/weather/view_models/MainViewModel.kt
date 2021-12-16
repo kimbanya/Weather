@@ -6,18 +6,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ban.weather.SearchCityResponseModel
 import com.ban.weather.WeatherResponseModel
-import com.ban.weather.api_utils.ApiInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.IllegalArgumentException
 
 class MainViewModel @ViewModelInject constructor(private val repository: MainRepository) : ViewModel() {
 
     private val TAG = javaClass.simpleName
 
     val weather = MutableLiveData<WeatherResponseModel>()
+    val searchedCities = MutableLiveData<List<SearchCityResponseModel>>()
     val allCities = repository.allCities
     val numberOfCities = MutableLiveData<Int>()
 
@@ -31,10 +31,24 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                     Log.d(TAG, "[getCityWeather]")
                     weather.postValue(response.body())
 
-
                 } else {
                     Log.d(TAG, "[Fail to getCityWeather]")
+                }
+            }
+        }
+    }
 
+    fun getCities(cityName: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val response = repository.getCityNames(cityName)
+
+                if (response.isSuccessful) {
+                    Log.d(TAG, "[getCities]")
+                    searchedCities.postValue(response.body())
+
+                } else {
+                    Log.d(TAG, "[Fail to getCities]")
                 }
             }
         }

@@ -2,10 +2,14 @@ package com.ban.weather
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.ban.weather.databinding.ActivitySearchBinding
+import com.ban.weather.view_models.MainViewModel
+import com.ban.weather.view_models.MainViewModelFactory
 
 class SearchActivity : AppCompatActivity() {
 
@@ -13,6 +17,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivitySearchBinding
 
+    private val viewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,13 +30,22 @@ class SearchActivity : AppCompatActivity() {
             text = message
         }
 
+        viewModel.searchedCities.observe(this, {
+            Log.d(TAG, "[observe]")
+            testText.text = "city name searched: ${it[0].title} / woeid: ${it[0].woeid}"
+        })
+
         binding.btSearchButton.setOnClickListener {
             val keyword = binding.etSearchKeyword
-            testText.text = keyword.text
 
             hideKeyboard(keyword)
+            searchCities(keyword.text.toString())
         }
 
+    }
+
+    fun searchCities(cityName: String) {
+        viewModel.getCities(cityName) // Example:Tokyo
     }
 
     fun hideKeyboard(view: View) {
