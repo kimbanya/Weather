@@ -1,5 +1,6 @@
 package com.ban.weather
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -7,13 +8,17 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ban.weather.databinding.ActivitySearchBinding
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
+import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
 
     private val TAG = javaClass.simpleName
+
+    private lateinit var recyclerViewAdapter: SearchRecyclerViewAdapter
 
     private lateinit var binding : ActivitySearchBinding
 
@@ -25,14 +30,9 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val message = intent.getStringExtra("test")
-        var testText = binding.tvTestText.apply {
-            text = message
-        }
-
         viewModel.searchedCities.observe(this, {
             Log.d(TAG, "[observe]")
-            testText.text = "city name searched: ${it[0].title} / woeid: ${it[0].woeid}"
+            initRecycler(it)
         })
 
         binding.btSearchButton.setOnClickListener {
@@ -42,6 +42,22 @@ class SearchActivity : AppCompatActivity() {
             searchCities(keyword.text.toString())
         }
 
+        // Intent test
+//        val message = intent.getStringExtra("test")
+//        var testText = binding.tvTestText.apply {
+//            text = message
+//        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initRecycler(dataList: List<SearchCityResponseModel>) {
+        Log.d(TAG, "[initRecycler]")
+        recyclerViewAdapter = SearchRecyclerViewAdapter(dataList, this)
+        binding.rvSearchedCityList.apply {
+            layoutManager = LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
+            adapter = recyclerViewAdapter
+        }
+        recyclerViewAdapter.notifyDataSetChanged()
     }
 
     fun searchCities(cityName: String) {
