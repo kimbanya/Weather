@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ban.weather.databinding.ActivitySearchBinding
+import com.ban.weather.models.CityInfo
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
 import kotlinx.android.synthetic.main.activity_search.*
@@ -70,7 +71,7 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    override fun onItemClickListener() {
-        Toast.makeText(this, "Item Clicked", Toast.LENGTH_SHORT).show()
+    override fun onItemClickListener(data: CityInfo) {
+        Toast.makeText(this, "${data.cityName} / ${data.woeid}", Toast.LENGTH_SHORT).show()
     }
 }

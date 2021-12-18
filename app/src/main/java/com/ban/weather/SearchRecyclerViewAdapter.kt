@@ -44,14 +44,11 @@ class SearchRecyclerViewAdapter(
         val saveButton = binding.ivSaveFavoriteButton
 
         fun bind(position: SearchCityResponseModel, context: Context) {
-            val data = position
-            cityName.text = data.title
-            saveButton.setOnClickListener {
-                itemClickListener.onItemClickListener()
+            val cityInfo: CityInfo = CityInfo(position.title, position.woeid)
+            cityName.text = position.title
 
-//                val cityInfo: CityInfo = CityInfo(position.title, position.woeid)
-//                Toast.makeText(context, "city name: ${data.title}, woeid: ${data.woeid.toString()}", Toast.LENGTH_SHORT).show()
-//                setCityInfoToBtn(CityInfo(data.title, data.woeid))
+            saveButton.setOnClickListener {
+                itemClickListener.onItemClickListener(cityInfo)
             }
 //            setPreffered.setImageResource()
             Log.d(TAG, "[SearchViewHolder inner class > bind]")

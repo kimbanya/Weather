@@ -1,5 +1,7 @@
 package com.ban.weather
 
+import com.ban.weather.models.CityInfo
+
 interface ItemClickListener {
-    fun onItemClickListener()
+    fun onItemClickListener(data: CityInfo)
 }
