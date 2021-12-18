@@ -4,13 +4,15 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.ban.weather.databinding.ItemSearchBinding
 import com.ban.weather.models.CityInfo
 
-class SearchRecyclerViewAdapter(val dataList: List<SearchCityResponseModel>, val context: Context)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchRecyclerViewAdapter(
+    val dataList: List<SearchCityResponseModel>,
+    val context: Context,
+    val itemClickListener: ItemClickListener
+    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG = javaClass.simpleName
 
@@ -42,11 +44,14 @@ class SearchRecyclerViewAdapter(val dataList: List<SearchCityResponseModel>, val
         val saveButton = binding.ivSaveFavoriteButton
 
         fun bind(position: SearchCityResponseModel, context: Context) {
-            cityName.text = position.title
+            val data = position
+            cityName.text = data.title
             saveButton.setOnClickListener {
+                itemClickListener.onItemClickListener()
+
 //                val cityInfo: CityInfo = CityInfo(position.title, position.woeid)
-                Toast.makeText(context, "city name: ${position.title}, woeid: ${position.woeid.toString()}", Toast.LENGTH_SHORT).show()
-                setCityInfoToBtn(CityInfo(position.title, position.woeid))
+//                Toast.makeText(context, "city name: ${data.title}, woeid: ${data.woeid.toString()}", Toast.LENGTH_SHORT).show()
+//                setCityInfoToBtn(CityInfo(data.title, data.woeid))
             }
 //            setPreffered.setImageResource()
             Log.d(TAG, "[SearchViewHolder inner class > bind]")

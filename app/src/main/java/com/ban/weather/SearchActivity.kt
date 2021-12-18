@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +15,7 @@ import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
 import kotlinx.android.synthetic.main.activity_search.*
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     private val TAG = javaClass.simpleName
 
@@ -52,7 +53,7 @@ class SearchActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun initRecycler(dataList: List<SearchCityResponseModel>) {
         Log.d(TAG, "[initRecycler]")
-        recyclerViewAdapter = SearchRecyclerViewAdapter(dataList, this)
+        recyclerViewAdapter = SearchRecyclerViewAdapter(dataList, this, this)
         binding.rvSearchedCityList.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
             adapter = recyclerViewAdapter
@@ -69,4 +70,7 @@ class SearchActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    override fun onItemClickListener() {
+        Toast.makeText(this, "Item Clicked", Toast.LENGTH_SHORT).show()
+    }
 }
