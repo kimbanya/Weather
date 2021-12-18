@@ -4,8 +4,10 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.ban.weather.databinding.ItemSearchBinding
+import com.ban.weather.models.CityInfo
 
 class SearchRecyclerViewAdapter(val dataList: List<SearchCityResponseModel>, val context: Context)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -37,12 +39,19 @@ class SearchRecyclerViewAdapter(val dataList: List<SearchCityResponseModel>, val
 
     inner class SearchViewHolder(private val binding: ItemSearchBinding) : RecyclerView.ViewHolder(binding.root) {
         val cityName = binding.tvCityTitle
-        val setPreffered = binding.ivSaveFavoriteButton
+        val saveButton = binding.ivSaveFavoriteButton
 
         fun bind(position: SearchCityResponseModel, context: Context) {
             cityName.text = position.title
+            saveButton.setOnClickListener {
+//                val cityInfo: CityInfo = CityInfo(position.title, position.woeid)
+                Toast.makeText(context, "city name: ${position.title}, woeid: ${position.woeid.toString()}", Toast.LENGTH_SHORT).show()
+                setCityInfoToBtn(CityInfo(position.title, position.woeid))
+            }
 //            setPreffered.setImageResource()
             Log.d(TAG, "[SearchViewHolder inner class > bind]")
+        }
+        fun setCityInfoToBtn(cityInfo: CityInfo) {
         }
     }
 
