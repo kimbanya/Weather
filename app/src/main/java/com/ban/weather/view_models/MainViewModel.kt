@@ -40,9 +40,8 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                 val response = repository.getCityWeather(woeid)
 
                 if (response.isSuccessful) {
-                    Log.d(TAG, "[getCityWeather]")
+                    Log.d(TAG, "[getCityWeather] result: ${response.body()}")
                     weather.postValue(response.body())
-
                 } else {
                     Log.d(TAG, "[Fail to getCityWeather]")
                 }

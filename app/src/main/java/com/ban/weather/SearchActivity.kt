@@ -41,12 +41,14 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
         binding.btSearchButton.setOnClickListener {
             val keyword = binding.etSearchKeyword
-
+            val keywordToString = keyword.text.toString()
             hideKeyboard(keyword)
-            searchCities(keyword.text.toString())
+            searchCities(keywordToString)
+            refresh(keywordToString)
         }
 
         addObservers()
+        refresh()
 
         // Intent test
 //        val message = intent.getStringExtra("test")
@@ -73,7 +75,7 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
     }
 
     fun searchCities(cityName: String) {
-        viewModel.getCities(cityName) // Example:Tokyo
+        viewModel.getCities(cityName)
     }
 
     fun hideKeyboard(view: View) {
@@ -84,5 +86,9 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
     override fun onItemClickListener(data: CityInfo) {
         Toast.makeText(this, "${data.cityName} / ${data.woeid}", Toast.LENGTH_SHORT).show()
         viewModel.saveCity(data)
+    }
+
+    fun refresh(searchKeyword: String = "") {
+        searchCities(searchKeyword)
     }
 }
