@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ban.weather.SearchCityResponseModel
 import com.ban.weather.WeatherResponseModel
+import com.ban.weather.models.CityInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,6 +22,17 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
     val allCities = repository.allCities
     val numberOfCities = MutableLiveData<Int>()
 
+    fun saveCity(cityInfo: CityInfo) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val response = repository.insertCity(cityInfo)
+                // success
+                Log.d(TAG, "[saveCity successful")
+
+                //fail
+            }
+        }
+    }
 
     fun getWeather(woeid: Int) {
         viewModelScope.launch {

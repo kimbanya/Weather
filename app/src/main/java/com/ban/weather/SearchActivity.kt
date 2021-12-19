@@ -24,6 +24,8 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     private lateinit var binding : ActivitySearchBinding
 
+    var numberOfCity = -1
+
     private val viewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +46,19 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
             searchCities(keyword.text.toString())
         }
 
+        addObservers()
+
         // Intent test
 //        val message = intent.getStringExtra("test")
 //        var testText = binding.tvTestText.apply {
 //            text = message
 //        }
+    }
+
+    private fun addObservers() {
+        viewModel.allCities.observe(this, {
+            Log.d(TAG, "[addObservers] num of total cities ${it.size}")
+        })
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -73,5 +83,6 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     override fun onItemClickListener(data: CityInfo) {
         Toast.makeText(this, "${data.cityName} / ${data.woeid}", Toast.LENGTH_SHORT).show()
+        viewModel.saveCity(data)
     }
 }
