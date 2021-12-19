@@ -44,16 +44,13 @@ class SearchRecyclerViewAdapter(
         val saveButton = binding.ivSaveFavoriteButton
 
         fun bind(position: SearchCityResponseModel, context: Context) {
-            val cityInfo: CityInfo = CityInfo(position.title, position.woeid)
+            val cityInfo = CityInfo(position.title, position.woeid)
             cityName.text = position.title
 
             saveButton.setOnClickListener {
                 itemClickListener.onItemClickListener(cityInfo)
             }
-//            setPreffered.setImageResource()
             Log.d(TAG, "[SearchViewHolder inner class > bind]")
-        }
-        fun setCityInfoToBtn(cityInfo: CityInfo) {
         }
     }
 

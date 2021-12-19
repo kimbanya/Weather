@@ -23,6 +23,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/tv_city_title"
-        android:src="@drawable/favorites_icon_before"/>
+        android:src="@drawable/img_save_btn_before_clicked"/>
 
 </LinearLayout>
