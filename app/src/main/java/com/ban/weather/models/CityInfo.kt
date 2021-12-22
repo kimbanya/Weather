@@ -8,12 +8,14 @@ import androidx.room.PrimaryKey
 data class CityInfo(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val cityName: String?,
-    val woeid: Int?
+    val woeid: Int,
+    val cityName: String,
+    var isFavorite: Boolean
 ) {
-    @Ignore constructor(cityName: String, woeid: Int) : this(
+    @Ignore constructor(woeid: Int, cityName: String, isFavorite: Boolean) : this(
         id = 0,
+        woeid = woeid,
         cityName = cityName,
-        woeid = woeid
+        isFavorite = false
     )
 }

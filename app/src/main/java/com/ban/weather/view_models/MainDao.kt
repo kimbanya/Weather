@@ -10,12 +10,18 @@ import com.ban.weather.models.CityInfo
 @Dao
 interface MainDao {
 
-    @Query("SELECT * from city_info")
-    fun getAllCities() : LiveData<List<CityInfo>>
+    @Query("SELECT * FROM city_info WHERE isFavorite")
+    fun getFavoriteList() : LiveData<List<CityInfo>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCity(cityInfo: CityInfo)
 
-    @Query("DELETE from city_info WHERE woeid = :woeid")
+    @Query("DELETE from city_info WHERE woeid is :woeid")
     fun deleteCity(woeid: Int)
+
+    @Query("DELETE FROM city_info")
+    fun deleteAll()
+
+    @Query("SELECT * FROM city_info WHERE woeid is :woeid")
+    fun findCityById(woeid: Int) : List<CityInfo>
 }

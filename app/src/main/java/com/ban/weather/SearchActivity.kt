@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,9 +23,16 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     private lateinit var binding : ActivitySearchBinding
 
-    var numberOfCity = -1
+    var numberOfCitiesSaved = -1
 
     private val viewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
+
+//    init {
+//        if (numberOfCitiesSaved > 0) {
+//            val favoriteList : List<CityInfo> = viewModel.favoriteList.value!!
+//            initRecycler(favoriteList)
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +40,7 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.searchedCities.observe(this, {
+        viewModel.presentingListMerged.observe(this, {
             Log.d(TAG, "[observe]")
             initRecycler(it)
         })
@@ -44,11 +50,10 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
             val keywordToString = keyword.text.toString()
             hideKeyboard(keyword)
             searchCities(keywordToString)
-            refresh(keywordToString)
         }
 
         addObservers()
-        refresh()
+
 
         // Intent test
 //        val message = intent.getStringExtra("test")
@@ -58,13 +63,18 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
     }
 
     private fun addObservers() {
-        viewModel.allCities.observe(this, {
-            Log.d(TAG, "[addObservers] num of total cities ${it.size}")
+        viewModel.numberOfCitiesSearched.observe(this,{
+            Log.d(TAG, "[addObservers] : the number of cities searched => $it")
+        })
+
+        viewModel.favoriteList.observe(this, {
+            Log.d(TAG, "[addObservers] : saved cities on DB => ${it.size}")
+            numberOfCitiesSaved = it.size
         })
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun initRecycler(dataList: List<SearchCityResponseModel>) {
+    private fun initRecycler(dataList: List<CityInfo>) {
         Log.d(TAG, "[initRecycler]")
         recyclerViewAdapter = SearchRecyclerViewAdapter(dataList, this, this)
         binding.rvSearchedCityList.apply {
@@ -74,21 +84,24 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
         recyclerViewAdapter.notifyDataSetChanged()
     }
 
-    fun searchCities(cityName: String) {
+    private fun searchCities(cityName: String) {
         viewModel.getCities(cityName)
     }
 
-    fun hideKeyboard(view: View) {
+    private fun hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     override fun onItemClickListener(data: CityInfo) {
-        Toast.makeText(this, "${data.cityName} / ${data.woeid}", Toast.LENGTH_SHORT).show()
-        viewModel.saveCity(data)
+        Log.d(TAG, "[onItemClickListner] >> ${data.cityName}, ${data.isFavorite}")
+
+        // save or delete process
+        if (data.isFavorite) {
+            viewModel.saveCity(data)
+        } else {
+            viewModel.deleteCity(data.woeid)
+        }
     }
 
-    fun refresh(searchKeyword: String = "") {
-        searchCities(searchKeyword)
-    }
 }

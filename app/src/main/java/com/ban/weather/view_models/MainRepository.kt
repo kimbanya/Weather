@@ -9,9 +9,7 @@ class MainRepository(private val mainDao: MainDao) {
     private val TAG = javaClass.simpleName
     private val apiInterface by lazy { ApiInterface.create()}
 
-
-    val allCities = mainDao.getAllCities()
-
+    val favoriteList = mainDao.getFavoriteList()
 
     // Server
     suspend fun getCityWeather(woeid: Int) = apiInterface.getWeatherById(woeid)
@@ -22,4 +20,15 @@ class MainRepository(private val mainDao: MainDao) {
     @WorkerThread
     suspend fun insertCity(cityInfo: CityInfo) = mainDao.insertCity(cityInfo)
 
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun deleteAll() = mainDao.deleteAll()
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun deleteCity(woeid: Int) = mainDao.deleteCity(woeid)
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun findCityById(woeid: Int) = mainDao.findCityById(woeid)
 }

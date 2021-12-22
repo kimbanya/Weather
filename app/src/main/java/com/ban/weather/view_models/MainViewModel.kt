@@ -2,11 +2,7 @@ package com.ban.weather.view_models
 
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import com.ban.weather.SearchCityResponseModel
+import androidx.lifecycle.*
 import com.ban.weather.WeatherResponseModel
 import com.ban.weather.models.CityInfo
 import kotlinx.coroutines.Dispatchers
@@ -18,18 +14,35 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
     private val TAG = javaClass.simpleName
 
     val weather = MutableLiveData<WeatherResponseModel>()
-    val searchedCities = MutableLiveData<List<SearchCityResponseModel>>()
-    val allCities = repository.allCities
-    val numberOfCities = MutableLiveData<Int>()
+    val numberOfCitiesSearched = MutableLiveData<Int>()
+    var favoriteList: LiveData<List<CityInfo>> = repository.favoriteList
+    var presentingListMerged = MutableLiveData<List<CityInfo>>()
+
+//    val allCities = repository.allCities
+//    val searchedCities = MutableLiveData<List<SearchCityResponseModel>>()
+
+    fun deleteCity(woeid: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.deleteCity(woeid)
+                Log.d(TAG, "[deleteCity]")
+            }
+        }
+    }
 
     fun saveCity(cityInfo: CityInfo) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val response = repository.insertCity(cityInfo)
-                // success
-                Log.d(TAG, "[saveCity successful")
-
-                //fail
+                val foundData = repository.findCityById(cityInfo.woeid)
+                if (foundData.isNotEmpty()) {
+                    if (foundData[0].woeid == cityInfo.woeid) {
+                        Log.d(TAG, "[saveCity] : duplicated data ${cityInfo.cityName}")
+                    }
+                }
+                if (foundData.isEmpty()) {
+                    repository.insertCity(cityInfo)
+                    Log.d(TAG, "[saveCity] : save successful ${cityInfo.cityName}")
+                }
             }
         }
     }
@@ -54,15 +67,46 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
             withContext(Dispatchers.IO) {
                 val response = repository.getCityNames(cityName)
 
+//                repository.deleteAll()
+
                 if (response.isSuccessful) {
-                    Log.d(TAG, "[getCities]")
-                    searchedCities.postValue(response.body())
+                    Log.d(TAG, "[getCities] : API response sucess")
+                    val tempList = mutableListOf<CityInfo>()
+
+                    response.body()?.map {
+                        val tempCityInfo : CityInfo
+                        var isFavorited : Boolean = false
+
+                        for (i in favoriteList.value!!) {
+                            if (i.woeid == it.woeid) {
+                                isFavorited = true
+                                break
+                                // Log.d(TAG, "i : ${i.woeid}, it : ${it.woeid}")
+                                }
+                            }
+                        tempCityInfo = CityInfo(
+                            woeid = it.woeid,
+                            cityName = it.title,
+                            isFavorite = isFavorited
+                        )
+
+                        tempList.add(tempCityInfo)
+                    }
+
+                    presentingListMerged.postValue(tempList)
+
+                    val list = response.body()
+                    numberOfCitiesSearched.postValue(list?.size)
 
                 } else {
                     Log.d(TAG, "[Fail to getCities]")
                 }
             }
         }
+    }
+
+    suspend fun deleteAll() {
+        repository.deleteAll()
     }
 
 }

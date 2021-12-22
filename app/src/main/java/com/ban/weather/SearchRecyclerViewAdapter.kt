@@ -9,14 +9,14 @@ import com.ban.weather.databinding.ItemSearchBinding
 import com.ban.weather.models.CityInfo
 
 class SearchRecyclerViewAdapter(
-    val dataList: List<SearchCityResponseModel>,
+    val dataList: List<CityInfo>,
     val context: Context,
     val itemClickListener: ItemClickListener
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG = javaClass.simpleName
 
-    private var cityDisplayInfoList: List<SearchCityResponseModel> = dataList
+    private var cityDisplayInfoList: List<CityInfo> = dataList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         Log.d(TAG, "[onCreateViewHolder]")
@@ -40,15 +40,29 @@ class SearchRecyclerViewAdapter(
     }
 
     inner class SearchViewHolder(private val binding: ItemSearchBinding) : RecyclerView.ViewHolder(binding.root) {
-        val cityName = binding.tvCityTitle
-        val saveButton = binding.ivSaveFavoriteButton
+        private val cityName = binding.tvCityTitle
+        private val saveButton = binding.ivSaveFavoriteButton
 
-        fun bind(position: SearchCityResponseModel, context: Context) {
-            val cityInfo = CityInfo(position.title, position.woeid)
-            cityName.text = position.title
+        fun bind(position: CityInfo, context: Context) {
+            cityName.text = position.cityName
 
+            // all presenting data
+            if (position.isFavorite) {
+                saveButton.setImageResource(R.drawable.img_save_btn_after_clicked)
+            } else {
+                saveButton.setImageResource(R.drawable.img_save_btn_before_clicked)
+            }
+
+            // process when save button clicked
             saveButton.setOnClickListener {
-                itemClickListener.onItemClickListener(cityInfo)
+                position.isFavorite = !position.isFavorite
+                if (position.isFavorite) {
+                    saveButton.setImageResource(R.drawable.img_save_btn_after_clicked)
+                } else {
+                    saveButton.setImageResource(R.drawable.img_save_btn_before_clicked)
+                }
+
+                itemClickListener.onItemClickListener(position)
             }
             Log.d(TAG, "[SearchViewHolder inner class > bind]")
         }
