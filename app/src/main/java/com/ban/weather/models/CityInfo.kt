@@ -16,6 +16,6 @@ data class CityInfo(
         id = 0,
         woeid = woeid,
         cityName = cityName,
-        isFavorite = false
+        isFavorite = isFavorite
     )
 }

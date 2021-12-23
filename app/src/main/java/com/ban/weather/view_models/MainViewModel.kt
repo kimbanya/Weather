@@ -18,8 +18,15 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
     var favoriteList: LiveData<List<CityInfo>> = repository.favoriteList
     var presentingListMerged = MutableLiveData<List<CityInfo>>()
 
-//    val allCities = repository.allCities
-//    val searchedCities = MutableLiveData<List<SearchCityResponseModel>>()
+    init {
+        if (favoriteList.value.isNullOrEmpty()) {
+            Log.d(TAG, "[init] >> favoriteList is NULL" )
+        }
+        else {
+            Log.d(TAG, "[init] >> favoriteList Size : ${favoriteList.value?.size}" )
+            presentingListMerged.postValue(favoriteList.value)
+        }
+    }
 
     fun deleteCity(woeid: Int) {
         viewModelScope.launch {
@@ -74,7 +81,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                     val tempList = mutableListOf<CityInfo>()
 
                     response.body()?.map {
-                        val tempCityInfo : CityInfo
+                        var tempCityInfo : CityInfo
                         var isFavorited : Boolean = false
 
                         for (i in favoriteList.value!!) {

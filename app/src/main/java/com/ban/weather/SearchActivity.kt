@@ -27,23 +27,12 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     private val viewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
 
-//    init {
-//        if (numberOfCitiesSaved > 0) {
-//            val favoriteList : List<CityInfo> = viewModel.favoriteList.value!!
-//            initRecycler(favoriteList)
-//        }
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel.presentingListMerged.observe(this, {
-            Log.d(TAG, "[observe]")
-            initRecycler(it)
-        })
 
         binding.btSearchButton.setOnClickListener {
             val keyword = binding.etSearchKeyword
@@ -53,13 +42,16 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
         }
 
         addObservers()
+        initRecycler()
 
-
+        /*
         // Intent test
-//        val message = intent.getStringExtra("test")
-//        var testText = binding.tvTestText.apply {
-//            text = message
-//        }
+        val message = intent.getStringExtra("test")
+        var testText = binding.tvTestText.apply {
+            text = message
+        }
+         */
+
     }
 
     private fun addObservers() {
@@ -70,13 +62,24 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
         viewModel.favoriteList.observe(this, {
             Log.d(TAG, "[addObservers] : saved cities on DB => ${it.size}")
             numberOfCitiesSaved = it.size
+            updateRecyclerView(it)
         })
+
+        viewModel.presentingListMerged.observe(this, {
+            Log.d(TAG, "[observe]")
+            updateRecyclerView(it)
+        })
+
+    }
+
+    fun updateRecyclerView(dataList: List<CityInfo>) {
+        recyclerViewAdapter.updateList(dataList)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun initRecycler(dataList: List<CityInfo>) {
+    private fun initRecycler() {
         Log.d(TAG, "[initRecycler]")
-        recyclerViewAdapter = SearchRecyclerViewAdapter(dataList, this, this)
+        recyclerViewAdapter = SearchRecyclerViewAdapter(this, this)
         binding.rvSearchedCityList.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
             adapter = recyclerViewAdapter

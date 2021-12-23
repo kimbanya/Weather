@@ -9,14 +9,13 @@ import com.ban.weather.databinding.ItemSearchBinding
 import com.ban.weather.models.CityInfo
 
 class SearchRecyclerViewAdapter(
-    val dataList: List<CityInfo>,
     val context: Context,
     val itemClickListener: ItemClickListener
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG = javaClass.simpleName
 
-    private var cityDisplayInfoList: List<CityInfo> = dataList
+    private var cityDisplayInfoList: List<CityInfo> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         Log.d(TAG, "[onCreateViewHolder]")
@@ -30,13 +29,18 @@ class SearchRecyclerViewAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         Log.d(TAG, "[onBindViewHolder]")
 
-        (holder as SearchViewHolder).bind(dataList[position], context)
+        (holder as SearchViewHolder).bind(cityDisplayInfoList[position], context)
     }
 
     override fun getItemCount(): Int {
         Log.d(TAG, "[getItemCount]")
 
         return cityDisplayInfoList.size
+    }
+
+    fun updateList(data : List<CityInfo>) {
+        cityDisplayInfoList = data
+        notifyDataSetChanged()
     }
 
     inner class SearchViewHolder(private val binding: ItemSearchBinding) : RecyclerView.ViewHolder(binding.root) {
