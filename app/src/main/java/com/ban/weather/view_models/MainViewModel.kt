@@ -74,6 +74,9 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
             withContext(Dispatchers.IO) {
                 val response = repository.getCityNames(cityName)
 
+                if (cityName == "") {
+                    presentingListMerged.postValue(favoriteList.value)
+                }
 //                repository.deleteAll()
 
                 if (response.isSuccessful) {
