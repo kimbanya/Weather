@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -42,74 +43,19 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
             searchCities(keywordToString)
         }
 
-        /*
-        binding.etSearchKeyword.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN || keyCode == KeyEvent.KEYCODE_ENTER) { // KeyCode:67
-                Log.d(TAG, "[setOnKeyListener] >> ${event.action} // $keyCode")
-
-                return@OnKeyListener true
-            }else {
-                return@OnKeyListener false
-            }
-        })
-         */
-
-        /*
-        // etSearchKeyword 완료 클릭 시
-        binding.etSearchKeyword.setOnEditorActionListener { v, actionId, event ->
+        val editText = binding.etSearchKeyword
+        editText.setOnEditorActionListener { textView, action, event ->
             var handled = false
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                binding.btSearchButton.performClick()
-                handled = true
-            }
-            handled
-        }
-         */
 
-//        binding.etSearchKeyword.setOnKeyListener { v, keyCode, event ->
-//            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-//                Log.d(TAG, "[onKey]")
-//                val keyword = binding.etSearchKeyword
-//                hideSoftKeyboard()
-//                keyword.clearFocus()
-//                keyword.isCursorVisible = false
-//                searchCities(keyword.text.toString())
-//            }
-//            true
-//        }
-
-        /*
-        binding.etSearchKeyword.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-                Log.d(TAG, "[onKey]")
-                val keyword = binding.etSearchKeyword
-                hideSoftKeyboard()
-                keyword.clearFocus()
-                keyword.isCursorVisible = false
-                searchCities(keyword.text.toString())
-                return@OnKeyListener true
-            }
-            false
-        })
-         */
-
-        /*
-        binding.etSearchKeyword.setOnKeyListener(object : View.OnKeyListener {
-            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-                if (event!!.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-//                if (event!!.action == KeyEvent.KEYCODE_ENTER) {
-                    Log.d(TAG, "[onKey]")
-                    val keyword = binding.etSearchKeyword
+            if(action == EditorInfo.IME_ACTION_SEARCH) {
                     hideSoftKeyboard()
-                    keyword.clearFocus()
-                    keyword.isCursorVisible = false
-                    searchCities(keyword.text.toString())
-                    return true
+                editText.clearFocus()
+                editText.isCursorVisible = false
+                    searchCities(editText.text.toString())
+                    handled = true
                 }
-                return false
+                handled
             }
-        })
-         */
 
         addObservers()
         initRecycler()
