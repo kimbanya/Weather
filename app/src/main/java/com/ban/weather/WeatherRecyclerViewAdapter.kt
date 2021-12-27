@@ -1,9 +1,12 @@
 package com.ban.weather
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.ban.weather.databinding.ItemWeatherBinding
 import com.bumptech.glide.Glide
@@ -22,8 +25,14 @@ class WeatherRecyclerViewAdapter(private val context: Context)
         return WeatherViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as WeatherViewHolder).bind(futureWeatherInfoList[position], context)
+
+        // Space out among items
+        val layoutParams = holder.itemView.layoutParams
+        layoutParams.height = 130
+        holder.itemView.requestLayout()
     }
 
     override fun getItemCount(): Int {
@@ -31,17 +40,19 @@ class WeatherRecyclerViewAdapter(private val context: Context)
     }
 
     inner class WeatherViewHolder(private val binding : ItemWeatherBinding) : RecyclerView.ViewHolder(binding.root) {
-//        val tomorrowDay = binding.tvTomorrowDay
-//        val tomorrowWeatherIcon = binding.ivTomorrowWeatherIcon
-//        val tomorrowWeatherStatus = binding.tvTomorrowWeatherStatus
-//        val tomorrowHighLow = binding.tvTomorrowHighLow
+        private val nextDay = binding.tvNextDate
+        private val nextWeatherIcon = binding.ivNextWeatherIcon
+        private val nextWeatherStatus = binding.tvNextWeatherStatus
+        private val nextHighLow = binding.tvNextHighLow
 
+        @RequiresApi(Build.VERSION_CODES.O)
+        @SuppressLint("SetTextI18n")
         fun bind(position: ConsolidatedWeatherModel, context: Context) {
-//            tomorrowDay.text = "${localDate.plusDays(1)}"
-//            tomorrowWeatherStatus.text = result!!.consolidatedWeather[1].weatherStateName
-//            tomorrowHighLow.text = "${result!!.consolidatedWeather[1].maxTemp.toInt().toString()}'/${result!!.consolidatedWeather[1].minTemp.toInt().toString()}'"
-//            val tomorrowWeatherAbbrString = result!!.consolidatedWeather[1].weatherStateAbbr
-//            setImageResource(tomorrowWeatherIcon, tomorrowWeatherAbbrString)
+            nextDay.text = position.applicableDate
+            nextWeatherStatus.text = position.weatherStateName
+            nextHighLow.text = position.maxTemp.toInt().toString() + "'c / " + position.minTemp.toInt().toString() + "'c"
+            val tomorrowWeatherAbbrString = position.weatherStateAbbr
+            setImageResource(nextWeatherIcon, tomorrowWeatherAbbrString)
         }
 
     }

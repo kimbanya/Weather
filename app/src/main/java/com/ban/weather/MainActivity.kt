@@ -21,7 +21,6 @@ import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
 import com.bumptech.glide.Glide
 import com.google.android.gms.location.*
-import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
 
@@ -72,14 +71,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateRecyclerView(dataList: List<ConsolidatedWeatherModel>) {
-        recyclerViewAdapter.updateList(dataList)
+        val tempList: MutableList<ConsolidatedWeatherModel> = dataList as MutableList<ConsolidatedWeatherModel>
+        tempList.removeAt(0)
+        recyclerViewAdapter.updateList(tempList)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun recyclerView() {
         Log.d(TAG, "[recyclerView]")
 
-        val recyclerViewAdapter = WeatherRecyclerViewAdapter(this)
+        recyclerViewAdapter = WeatherRecyclerViewAdapter(this)
         binding.rvFutureWeatherInfo.apply {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
             adapter = recyclerViewAdapter
@@ -147,7 +148,7 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateTodayView(result: WeatherResponseModel?) {
-        val localDate: LocalDate = LocalDate.now()
+        val todayWeather = result!!.consolidatedWeather[0]
 
         val title = binding.tvLocationTitle
         val theTemp = binding.tvTheTemp
@@ -155,14 +156,33 @@ class MainActivity : AppCompatActivity() {
         val maxTemp = binding.tvMaxTemp
         val minTemp = binding.tvMinTemp
         val weatherIcon = binding.ivWeatherIcon
-        val weatherAbbrString = result!!.consolidatedWeather[0].weatherStateAbbr
+        val weatherAbbrString = todayWeather.weatherStateAbbr
 
-        recyclerViewAdapter.setImageResource(weatherIcon, weatherAbbrString)
+        setImageResource(weatherIcon, weatherAbbrString)
         title.text = result!!.title
-        theTemp.text = "Temperature : ${result!!.consolidatedWeather[0].theTemp.toInt().toString()}'"
-        weatherState.text = "Weather: ${result!!.consolidatedWeather[0].weatherStateName}"
-        maxTemp.text = "High temp : ${result!!.consolidatedWeather[0].maxTemp.toInt().toString()}'"
-        minTemp.text = "Low temp : ${result!!.consolidatedWeather[0].minTemp.toInt().toString()}'"
+        theTemp.text = "Temperature : ${todayWeather.theTemp.toInt()}'"
+        weatherState.text = "Weather: ${todayWeather.weatherStateName}"
+        maxTemp.text = "High temp : ${todayWeather.maxTemp.toInt()}'"
+        minTemp.text = "Low temp : ${todayWeather.minTemp.toInt()}'"
+    }
+
+    fun setImageResource(imageView: ImageView, category:String?) {
+        var url = "https://www.metaweather.com/static/img/weather/png/%s.png"
+        when (category) {
+            "sn" -> { url = java.lang.String.format(url, "sn")}
+            "sl" -> {url = java.lang.String.format(url, "sl")}
+            "h" -> {url = java.lang.String.format(url, "h")}
+            "t" -> {url = java.lang.String.format(url, "t")}
+            "hr" -> {url = java.lang.String.format(url, "hr")}
+            "lr" -> {url = java.lang.String.format(url, "lr")}
+            "s" -> {url = java.lang.String.format(url, "s")}
+            "hc" -> {url = java.lang.String.format(url, "hc")}
+            "lc" -> {url = java.lang.String.format(url, "lc")}
+            else -> {
+                url = java.lang.String.format(url, "c")
+            }
+        }
+        Glide.with(imageView.context).load(url).into(imageView)
     }
 
 }
