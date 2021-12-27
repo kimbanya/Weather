@@ -1,6 +1,7 @@
 package com.ban.weather
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,6 +15,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ban.weather.databinding.ActivityMainBinding
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
@@ -26,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
 
     private lateinit var binding : ActivityMainBinding
+
+    private lateinit var recyclerViewAdapter: WeatherRecyclerViewAdapter
 
     // View Model
     private val mainViewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
@@ -63,7 +67,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         addObservers()
+        recyclerView()
 
+    }
+
+    private fun updateRecyclerView(dataList: List<ConsolidatedWeatherModel>) {
+        recyclerViewAdapter.updateList(dataList)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun recyclerView() {
+        Log.d(TAG, "[recyclerView]")
+
+        val recyclerViewAdapter = WeatherRecyclerViewAdapter(this)
+        binding.rvFutureWeatherInfo.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+            adapter = recyclerViewAdapter
+        }
+        recyclerViewAdapter.notifyDataSetChanged()
     }
 
     private fun startLocationUpdates() {
@@ -94,7 +115,8 @@ class MainActivity : AppCompatActivity() {
     private fun addObservers() {
         mainViewModel.weather.observe(this, {
             Log.d(TAG, "[observe] ${it.title}")
-            updateView(it)
+            updateTodayView(it)
+            updateRecyclerView(it.consolidatedWeather)
         })
     }
 
@@ -124,7 +146,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateView(result: WeatherResponseModel?) {
+    private fun updateTodayView(result: WeatherResponseModel?) {
         val localDate: LocalDate = LocalDate.now()
 
         val title = binding.tvLocationTitle
@@ -133,49 +155,14 @@ class MainActivity : AppCompatActivity() {
         val maxTemp = binding.tvMaxTemp
         val minTemp = binding.tvMinTemp
         val weatherIcon = binding.ivWeatherIcon
+        val weatherAbbrString = result!!.consolidatedWeather[0].weatherStateAbbr
 
-
-        val tomorrowDay = binding.tvTomorrowDay
-        val tomorrowWeatherIcon = binding.ivTomorrowWeatherIcon
-        val tomorrowWeatherStatus = binding.tvTomorrowWeatherStatus
-        val tomorrowHighLow = binding.tvTomorrowHighLow
-
+        recyclerViewAdapter.setImageResource(weatherIcon, weatherAbbrString)
         title.text = result!!.title
         theTemp.text = "Temperature : ${result!!.consolidatedWeather[0].theTemp.toInt().toString()}'"
         weatherState.text = "Weather: ${result!!.consolidatedWeather[0].weatherStateName}"
         maxTemp.text = "High temp : ${result!!.consolidatedWeather[0].maxTemp.toInt().toString()}'"
         minTemp.text = "Low temp : ${result!!.consolidatedWeather[0].minTemp.toInt().toString()}'"
-
-        val weatherAbbrString = result!!.consolidatedWeather[0].weatherStateAbbr
-        setImageResource(weatherIcon, weatherAbbrString)
-
-
-        tomorrowDay.text = "${localDate.plusDays(1)}"
-        tomorrowWeatherStatus.text = result!!.consolidatedWeather[1].weatherStateName
-        tomorrowHighLow.text = "${result!!.consolidatedWeather[1].maxTemp.toInt().toString()}'/${result!!.consolidatedWeather[1].minTemp.toInt().toString()}'"
-
-        val tomorrowWeatherAbbrString = result!!.consolidatedWeather[1].weatherStateAbbr
-        setImageResource(tomorrowWeatherIcon, tomorrowWeatherAbbrString)
-    }
-
-    fun setImageResource(imageView: ImageView, category:String?) {
-        var url = "https://www.metaweather.com/static/img/weather/png/%s.png"
-        when (category) {
-            "sn" -> { url = java.lang.String.format(url, "sn")}
-            "sl" -> {url = java.lang.String.format(url, "sl")}
-            "h" -> {url = java.lang.String.format(url, "h")}
-            "t" -> {url = java.lang.String.format(url, "t")}
-            "hr" -> {url = java.lang.String.format(url, "hr")}
-            "lr" -> {url = java.lang.String.format(url, "lr")}
-            "s" -> {url = java.lang.String.format(url, "s")}
-            "hc" -> {url = java.lang.String.format(url, "hc")}
-            "lc" -> {url = java.lang.String.format(url, "lc")}
-            else -> {
-                // "c" will fall under here
-                url = java.lang.String.format(url, "c")
-            }
-        }
-        Glide.with(imageView.context).load(url).into(imageView)
     }
 
 }

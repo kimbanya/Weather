@@ -1,6 +1,7 @@
 package com.ban.weather
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -37,20 +38,81 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
         binding.btSearchButton.setOnClickListener {
             val keyword = binding.etSearchKeyword
             val keywordToString = keyword.text.toString()
-            hideKeyboard(keyword)
+            hideSoftKeyboard()
             searchCities(keywordToString)
         }
 
-        addObservers()
-        initRecycler()
+        /*
+        binding.etSearchKeyword.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN || keyCode == KeyEvent.KEYCODE_ENTER) { // KeyCode:67
+                Log.d(TAG, "[setOnKeyListener] >> ${event.action} // $keyCode")
+
+                return@OnKeyListener true
+            }else {
+                return@OnKeyListener false
+            }
+        })
+         */
 
         /*
-        // Intent test
-        val message = intent.getStringExtra("test")
-        var testText = binding.tvTestText.apply {
-            text = message
+        // etSearchKeyword 완료 클릭 시
+        binding.etSearchKeyword.setOnEditorActionListener { v, actionId, event ->
+            var handled = false
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                binding.btSearchButton.performClick()
+                handled = true
+            }
+            handled
         }
          */
+
+//        binding.etSearchKeyword.setOnKeyListener { v, keyCode, event ->
+//            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+//                Log.d(TAG, "[onKey]")
+//                val keyword = binding.etSearchKeyword
+//                hideSoftKeyboard()
+//                keyword.clearFocus()
+//                keyword.isCursorVisible = false
+//                searchCities(keyword.text.toString())
+//            }
+//            true
+//        }
+
+        /*
+        binding.etSearchKeyword.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                Log.d(TAG, "[onKey]")
+                val keyword = binding.etSearchKeyword
+                hideSoftKeyboard()
+                keyword.clearFocus()
+                keyword.isCursorVisible = false
+                searchCities(keyword.text.toString())
+                return@OnKeyListener true
+            }
+            false
+        })
+         */
+
+        /*
+        binding.etSearchKeyword.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (event!!.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+//                if (event!!.action == KeyEvent.KEYCODE_ENTER) {
+                    Log.d(TAG, "[onKey]")
+                    val keyword = binding.etSearchKeyword
+                    hideSoftKeyboard()
+                    keyword.clearFocus()
+                    keyword.isCursorVisible = false
+                    searchCities(keyword.text.toString())
+                    return true
+                }
+                return false
+            }
+        })
+         */
+
+        addObservers()
+        initRecycler()
 
     }
 
@@ -72,7 +134,7 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     }
 
-    fun updateRecyclerView(dataList: List<CityInfo>) {
+    private fun updateRecyclerView(dataList: List<CityInfo>) {
         recyclerViewAdapter.updateList(dataList)
     }
 
@@ -94,6 +156,12 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
     private fun hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun Activity.hideSoftKeyboard(){
+        (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+            hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        }
     }
 
     override fun onItemClickListener(data: CityInfo) {

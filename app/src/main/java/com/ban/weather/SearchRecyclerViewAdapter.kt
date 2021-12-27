@@ -9,9 +9,8 @@ import com.ban.weather.databinding.ItemSearchBinding
 import com.ban.weather.models.CityInfo
 
 class SearchRecyclerViewAdapter(
-    val context: Context,
-    val itemClickListener: ItemClickListener
-    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val context: Context, val itemClickListener: ItemClickListener)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG = javaClass.simpleName
 

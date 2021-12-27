@@ -125,43 +125,16 @@
     <!--    header of future weather ends -->
 
 
-    <!--    container of future weather starts -->
-    <LinearLayout
-        android:id="@+id/ll_future_weather"
+    <!--    recycler view starts -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_future_weather_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="3"
-        app:layout_constraintTop_toBottomOf="@id/ll_header_future_weather">
-
-        <TextView
-            android:id="@+id/tv_tomorrow_day"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="tomorrow" />
-
-        <ImageView
-            android:id="@+id/iv_tomorrow_weather_icon"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="icon" />
-
-        <TextView
-            android:id="@+id/tv_tomorrow_weather_status"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="status" />
-
-        <TextView
-            android:id="@+id/tv_tomorrow_high_low"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="20'/0'" />
-
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_weather"
+        app:layout_constraintTop_toBottomOf="@id/ll_header_future_weather" />
+    <!--    recycler view ends -->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fba_add_city_button"
