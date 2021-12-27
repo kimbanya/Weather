@@ -54,6 +54,21 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
         }
     }
 
+    fun getWeatherByLattLong(lattLong: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val response = repository.getCityWeatherByLattLong(lattLong)
+
+                if (response.isSuccessful) {
+                    Log.d(TAG, "[getWeatherByLattLong] result: ${response.body()}")
+                    weather.postValue(response.body())
+                } else {
+                    Log.d(TAG, "[Fail to getWeatherByLattLong]")
+                }
+            }
+        }
+    }
+
     fun getWeather(woeid: Int) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
