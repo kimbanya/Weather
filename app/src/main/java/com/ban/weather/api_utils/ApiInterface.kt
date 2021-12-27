@@ -32,5 +32,5 @@ interface ApiInterface {
     suspend fun getCityNameByName(@Query("query") cityName: String): Response<List<SearchCityResponseModel>>
 
     @GET("location/search/")
-    suspend fun getWeatherByLattLong(@Query("lattlong") lattLong: String) : Response<WeatherResponseModel>
+    suspend fun getWeatherByLattLong(@Query("lattlong") lattLong: String) : Response<List<SearchCityResponseModel>>
 }

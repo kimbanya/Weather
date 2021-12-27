@@ -60,8 +60,9 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                 val response = repository.getCityWeatherByLattLong(lattLong)
 
                 if (response.isSuccessful) {
-                    Log.d(TAG, "[getWeatherByLattLong] result: ${response.body()}")
-                    weather.postValue(response.body())
+                    Log.d(TAG, "[getWeatherByLattLong] result city : ${response.body()?.get(0)!!.title}")
+                    getWeather(response.body()?.get(0)!!.woeid)
+
                 } else {
                     Log.d(TAG, "[Fail to getWeatherByLattLong]")
                 }
@@ -69,7 +70,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
         }
     }
 
-    fun getWeather(woeid: Int) {
+    private fun getWeather(woeid: Int) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val response = repository.getCityWeather(woeid)
@@ -92,7 +93,6 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                 if (cityName == "") {
                     presentingListMerged.postValue(favoriteList.value)
                 }
-//                repository.deleteAll()
 
                 if (response.isSuccessful) {
                     Log.d(TAG, "[getCities] : API response sucess")
@@ -130,9 +130,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
         }
     }
 
-    suspend fun deleteAll() {
-        repository.deleteAll()
-    }
+    suspend fun deleteAll() { repository.deleteAll() }
 
 }
 

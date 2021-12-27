@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Request Current Location
         mLocationRequest =  LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
@@ -52,9 +53,6 @@ class MainActivity : AppCompatActivity() {
         if (requestGpsPermission(this)) {
             startLocationUpdates()
         }
-
-        // Get Weather Info from Api
-//        mainViewModel.getWeather(1118370) // Example:Tokyo
 
         // Move to a Acticity of Search City
         binding.fbaAddCityButton.setOnClickListener {
@@ -87,12 +85,9 @@ class MainActivity : AppCompatActivity() {
     fun onLocationChanged(location: Location) {
         val latitude = Math.round(location.latitude.toFloat() * 1000) / 1000f
         val longitude = Math.round(location.longitude.toFloat() * 1000) / 1000f
+        val lattLongQueryString = "$latitude,$longitude"
 
-        val sampleText = "위도 + 경도 : $latitude,$longitude"
-        binding.tvLocationTest.text = sampleText
-
-        val arr = arrayOf(latitude, longitude)
-        mainViewModel.getWeatherByLattLong(sampleText)
+        mainViewModel.getWeatherByLattLong(lattLongQueryString)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
