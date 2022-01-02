@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         // Add View Pager Adapter
+        viewPager = binding.pager
         viewPagerAdapter = ScreenSlidePagerAdapter(this)
         if (this::viewPager.isInitialized) {
             viewPager.adapter = viewPagerAdapter
@@ -130,6 +131,17 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "[observe] >> favoriteList, num of saved cities => ${it.size}")
             numberOfCities = it.size
         })
+    }
+
+    override fun onBackPressed() {
+        if (viewPager.currentItem == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            super.onBackPressed()
+        } else {
+            // Otherwise, select the previous step.
+            viewPager.currentItem = viewPager.currentItem - 1
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
