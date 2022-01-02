@@ -1,7 +1,10 @@
 package com.ban.weather.api_utils
 
+import com.ban.weather.BuildConfig
 import com.ban.weather.SearchCityResponseModel
 import com.ban.weather.WeatherResponseModel
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,10 +22,22 @@ interface ApiInterface {
 
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(builderHttpClient())
                 .baseUrl(BASE_URL)
                 .build()
             return retrofit.create(ApiInterface::class.java)
         }
+
+        private fun builderHttpClient() : OkHttpClient {
+            val client = OkHttpClient.Builder()
+            if (BuildConfig.DEBUG) {
+                val logging = HttpLoggingInterceptor()
+                logging.level = HttpLoggingInterceptor.Level.BODY
+                client.addInterceptor(logging)
+            }
+            return client.build()
+        }
+
     }
 
     @GET("location/{woeid}")
