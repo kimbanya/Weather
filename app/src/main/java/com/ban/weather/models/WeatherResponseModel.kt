@@ -5,7 +5,9 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 
+@Parcelize
 data class SearchCityResponseModel(
     val title : String,
     val woeid : Int,
@@ -13,12 +15,11 @@ data class SearchCityResponseModel(
     val lattLong : String,
     @SerializedName("location_type")
     val locationType : String
-)
+) : Parcelable
 
 @Parcelize
 data class WeatherResponseModel(
     @SerializedName("consolidated_weather")
-    @IgnoredOnParcel
     val consolidatedWeather: List<ConsolidatedWeatherModel>,
 
     val time: String,
@@ -32,10 +33,8 @@ data class WeatherResponseModel(
     @SerializedName("timezone_name")
     val timezoneName: String,
 
-    @IgnoredOnParcel
     val parent: Parent,
 
-    @IgnoredOnParcel
     val sources: List<Source>,
 
     val title: String,
@@ -49,7 +48,9 @@ data class WeatherResponseModel(
     val lattLong: String,
 
     val timezone: String
-) : Parcelable {
+) : Parcelable
+/*
+{
     constructor(parcel: Parcel) : this(
         TODO("consolidatedWeather"),
         parcel.readString().toString(),
@@ -93,6 +94,8 @@ data class WeatherResponseModel(
     }
 }
 
+ */
+
 @Parcelize
 data class ConsolidatedWeatherModel(
 
@@ -133,10 +136,9 @@ data class ConsolidatedWeatherModel(
     val humidity: Long,
     val visibility: Double,
     val predictability: Long
+) : Parcelable
 
-
-)
-
+@Parcelize
 data class Parent(
     val title: String,
 
@@ -147,8 +149,10 @@ data class Parent(
 
     @SerializedName("latt_long")
     val lattLong: String
-)
 
+) : Parcelable
+
+@Parcelize
 data class Source(
     val title: String,
     val slug: String,
@@ -156,4 +160,5 @@ data class Source(
 
     @SerializedName("crawl_rate")
     val crawlRate: Long
-)
+
+) : Parcelable
