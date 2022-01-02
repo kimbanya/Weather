@@ -1,7 +1,10 @@
-package com.ban.weather
+package com.ban.weather.models
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
 data class SearchCityResponseModel(
     val title : String,
@@ -12,8 +15,10 @@ data class SearchCityResponseModel(
     val locationType : String
 )
 
+@Parcelize
 data class WeatherResponseModel(
     @SerializedName("consolidated_weather")
+    @IgnoredOnParcel
     val consolidatedWeather: List<ConsolidatedWeatherModel>,
 
     val time: String,
@@ -27,8 +32,12 @@ data class WeatherResponseModel(
     @SerializedName("timezone_name")
     val timezoneName: String,
 
+    @IgnoredOnParcel
     val parent: Parent,
+
+    @IgnoredOnParcel
     val sources: List<Source>,
+
     val title: String,
 
     @SerializedName("location_type")
@@ -40,8 +49,51 @@ data class WeatherResponseModel(
     val lattLong: String,
 
     val timezone: String
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        TODO("consolidatedWeather"),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        TODO("parent"),
+        TODO("sources"),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readInt(),
+        parcel.readString().toString(),
+        parcel.readString().toString()
+    ) {
+    }
 
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(time)
+        parcel.writeString(sunRise)
+        parcel.writeString(sunSet)
+        parcel.writeString(timezoneName)
+        parcel.writeString(title)
+        parcel.writeString(locationType)
+        parcel.writeInt(woeid)
+        parcel.writeString(lattLong)
+        parcel.writeString(timezone)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<WeatherResponseModel> {
+        override fun createFromParcel(parcel: Parcel): WeatherResponseModel {
+            return WeatherResponseModel(parcel)
+        }
+
+        override fun newArray(size: Int): Array<WeatherResponseModel?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+@Parcelize
 data class ConsolidatedWeatherModel(
 
     val id: Long,

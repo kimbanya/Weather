@@ -16,7 +16,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.ban.weather.databinding.ActivityMainBinding
+import com.ban.weather.models.ConsolidatedWeatherModel
+import com.ban.weather.models.WeatherResponseModel
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
 import com.bumptech.glide.Glide
@@ -31,6 +34,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerViewAdapter: WeatherRecyclerViewAdapter
 
     private var numberOfCities = -1
+
+    // View Pager
+    private lateinit var viewPager: ViewPager2
+    private lateinit var viewPagerAdapter: ScreenSlidePagerAdapter
+
+    private lateinit var listFragment: List<WeatherFragment>
 
     // View Model
     private val mainViewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
@@ -59,6 +68,17 @@ class MainActivity : AppCompatActivity() {
             startLocationUpdates()
         }
 
+        initView()
+        addObservers()
+//        recyclerView()
+
+    }
+
+    fun initView() {
+        // Add View Pager Adapter
+        viewPagerAdapter = ScreenSlidePagerAdapter(this)
+        viewPager.adapter = viewPagerAdapter
+
         // Move to a Acticity of Search City
         binding.fbaAddCityButton.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java).apply {
@@ -66,18 +86,16 @@ class MainActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
-
-        addObservers()
-        recyclerView()
-
     }
 
+    // TODO(move)
     private fun updateRecyclerView(dataList: List<ConsolidatedWeatherModel>) {
         val tempList: MutableList<ConsolidatedWeatherModel> = dataList as MutableList<ConsolidatedWeatherModel>
         tempList.removeAt(0)
         recyclerViewAdapter.updateList(tempList)
     }
 
+    // TODO(move)
     @SuppressLint("NotifyDataSetChanged")
     private fun recyclerView() {
         Log.d(TAG, "[recyclerView]")
@@ -118,6 +136,14 @@ class MainActivity : AppCompatActivity() {
     private fun addObservers() {
         mainViewModel.weather.observe(this, {
             Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
+
+            it.map {
+                val fragment = WeatherFragment.newInstance(it)
+                listFragment.plus(fragment)
+            }
+
+            viewPagerAdapter.updateData(listFragment)
+
 //            updateTodayView(it)
 //            updateRecyclerView(it.consolidatedWeather)
         })
@@ -153,6 +179,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // TODO(move)
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateTodayView(result: WeatherResponseModel?) {
         val todayWeather = result!!.consolidatedWeather[0]
@@ -173,6 +200,7 @@ class MainActivity : AppCompatActivity() {
         minTemp.text = "Low temp : ${todayWeather.minTemp.toInt()}'"
     }
 
+    // TODO(move)
     fun setImageResource(imageView: ImageView, category:String?) {
         var url = "https://www.metaweather.com/static/img/weather/png/%s.png"
         when (category) {

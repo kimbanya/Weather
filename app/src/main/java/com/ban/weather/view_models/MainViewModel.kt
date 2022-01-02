@@ -3,7 +3,7 @@ package com.ban.weather.view_models
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.ban.weather.WeatherResponseModel
+import com.ban.weather.models.WeatherResponseModel
 import com.ban.weather.models.CityInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

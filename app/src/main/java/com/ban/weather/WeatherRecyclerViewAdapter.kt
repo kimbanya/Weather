@@ -9,6 +9,7 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.ban.weather.databinding.ItemWeatherBinding
+import com.ban.weather.models.ConsolidatedWeatherModel
 import com.bumptech.glide.Glide
 
 class WeatherRecyclerViewAdapter(private val context: Context)

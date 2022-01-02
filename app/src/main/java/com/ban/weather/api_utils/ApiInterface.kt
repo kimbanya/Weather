@@ -1,8 +1,8 @@
 package com.ban.weather.api_utils
 
 import com.ban.weather.BuildConfig
-import com.ban.weather.SearchCityResponseModel
-import com.ban.weather.WeatherResponseModel
+import com.ban.weather.models.SearchCityResponseModel
+import com.ban.weather.models.WeatherResponseModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
