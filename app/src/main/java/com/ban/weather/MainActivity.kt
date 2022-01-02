@@ -74,10 +74,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun initView() {
+    private fun initView() {
         // Add View Pager Adapter
         viewPagerAdapter = ScreenSlidePagerAdapter(this)
-        viewPager.adapter = viewPagerAdapter
+        if (this::viewPager.isInitialized) {
+            viewPager.adapter = viewPagerAdapter
+        }
 
         // Move to a Acticity of Search City
         binding.fbaAddCityButton.setOnClickListener {
@@ -136,14 +138,13 @@ class MainActivity : AppCompatActivity() {
     private fun addObservers() {
         mainViewModel.weather.observe(this, {
             Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
-
-            it.map {
-                val fragment = WeatherFragment.newInstance(it)
-                listFragment.plus(fragment)
+            if (this::listFragment.isInitialized) {
+                it.map {
+                    val fragment = WeatherFragment.newInstance(it)
+                    listFragment.plus(fragment)
+                }
+                viewPagerAdapter.updateData(listFragment)
             }
-
-            viewPagerAdapter.updateData(listFragment)
-
 //            updateTodayView(it)
 //            updateRecyclerView(it.consolidatedWeather)
         })
