@@ -1,14 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".WeatherFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!--    title of location or city starts -->
     <TextView
+        android:id="@+id/tv_location_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Location"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--    title of location or city ends -->
 
-</FrameLayout>
+
+    <!--    container of today weather starts -->
+    <LinearLayout
+        android:id="@+id/ll_container_today_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_location_title">
+
+        <ImageView
+            android:id="@+id/iv_weather_icon"
+            android:layout_width="0dp"
+            android:layout_height="110dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_the_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:text="current temp" />
+
+            <TextView
+                android:id="@+id/tv_weather_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="weather state"
+                android:textSize="17sp"
+                android:layout_marginTop="7dp"/>
+
+            <TextView
+                android:id="@+id/tv_max_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textSize="17sp"
+                android:text="max temp" />
+
+            <TextView
+                android:id="@+id/tv_min_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textSize="17sp"
+                android:text="min temp" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--    container of today weather ends -->
+
+
+    <!--    header of future weather starts -->
+    <LinearLayout
+        android:id="@+id/ll_header_future_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@id/ll_container_today_weather">
+
+        <TextView
+            android:id="@+id/tv_header_day"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:text="day"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_header_weather"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="weather"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_header_high_low"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textSize="17sp"
+            android:text="high/low"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    <!--    header of future weather ends -->
+
+
+    <!--    recycler view starts -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_future_weather_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="15dp"
+        tools:listitem="@layout/item_weather"
+        app:layout_constraintTop_toBottomOf="@id/ll_header_future_weather" />
+    <!--    recycler view ends -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

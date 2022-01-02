@@ -31,22 +31,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
 
-    private lateinit var recyclerViewAdapter: WeatherRecyclerViewAdapter
-
     private var numberOfCities = -1
-
-    // View Pager
-    private lateinit var viewPager: ViewPager2
-    private lateinit var viewPagerAdapter: ScreenSlidePagerAdapter
-
-    private lateinit var listFragment: List<WeatherFragment>
 
     // View Model
     private val mainViewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
 
+    // View Pager
+    private lateinit var viewPager: ViewPager2
+    private lateinit var viewPagerAdapter: ScreenSlidePagerAdapter
+    private lateinit var listFragment: List<WeatherFragment>
+
     // Current Location
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
-    private lateinit var mLastLocation: Location
+//    private lateinit var mLastLocation: Location
     private lateinit var mLocationRequest: LocationRequest
     private val REQUEST_PERMISSION_LOCATION = 10
 
@@ -88,26 +85,6 @@ class MainActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
-    }
-
-    // TODO(move)
-    private fun updateRecyclerView(dataList: List<ConsolidatedWeatherModel>) {
-        val tempList: MutableList<ConsolidatedWeatherModel> = dataList as MutableList<ConsolidatedWeatherModel>
-        tempList.removeAt(0)
-        recyclerViewAdapter.updateList(tempList)
-    }
-
-    // TODO(move)
-    @SuppressLint("NotifyDataSetChanged")
-    private fun recyclerView() {
-        Log.d(TAG, "[recyclerView]")
-
-        recyclerViewAdapter = WeatherRecyclerViewAdapter(this)
-        binding.rvFutureWeatherInfo.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
-            adapter = recyclerViewAdapter
-        }
-        recyclerViewAdapter.notifyDataSetChanged()
     }
 
     private fun startLocationUpdates() {
@@ -180,46 +157,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // TODO(move)
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateTodayView(result: WeatherResponseModel?) {
-        val todayWeather = result!!.consolidatedWeather[0]
 
-        val title = binding.tvLocationTitle
-        val theTemp = binding.tvTheTemp
-        val weatherState = binding.tvWeatherState
-        val maxTemp = binding.tvMaxTemp
-        val minTemp = binding.tvMinTemp
-        val weatherIcon = binding.ivWeatherIcon
-        val weatherAbbrString = todayWeather.weatherStateAbbr
-
-        setImageResource(weatherIcon, weatherAbbrString)
-        title.text = result!!.title
-        theTemp.text = "Temperature : ${todayWeather.theTemp.toInt()}'"
-        weatherState.text = "Weather: ${todayWeather.weatherStateName}"
-        maxTemp.text = "High temp : ${todayWeather.maxTemp.toInt()}'"
-        minTemp.text = "Low temp : ${todayWeather.minTemp.toInt()}'"
-    }
-
-    // TODO(move)
-    fun setImageResource(imageView: ImageView, category:String?) {
-        var url = "https://www.metaweather.com/static/img/weather/png/%s.png"
-        when (category) {
-            "sn" -> { url = java.lang.String.format(url, "sn")}
-            "sl" -> {url = java.lang.String.format(url, "sl")}
-            "h" -> {url = java.lang.String.format(url, "h")}
-            "t" -> {url = java.lang.String.format(url, "t")}
-            "hr" -> {url = java.lang.String.format(url, "hr")}
-            "lr" -> {url = java.lang.String.format(url, "lr")}
-            "s" -> {url = java.lang.String.format(url, "s")}
-            "hc" -> {url = java.lang.String.format(url, "hc")}
-            "lc" -> {url = java.lang.String.format(url, "lc")}
-            else -> {
-                url = java.lang.String.format(url, "c")
-            }
-        }
-        Glide.with(imageView.context).load(url).into(imageView)
-    }
 
 }
 

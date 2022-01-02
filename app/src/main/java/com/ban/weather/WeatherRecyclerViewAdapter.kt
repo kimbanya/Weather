@@ -12,7 +12,7 @@ import com.ban.weather.databinding.ItemWeatherBinding
 import com.ban.weather.models.ConsolidatedWeatherModel
 import com.bumptech.glide.Glide
 
-class WeatherRecyclerViewAdapter(private val context: Context)
+class WeatherRecyclerViewAdapter(private val context: WeatherFragment)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG = javaClass.simpleName
@@ -28,7 +28,7 @@ class WeatherRecyclerViewAdapter(private val context: Context)
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as WeatherViewHolder).bind(futureWeatherInfoList[position], context)
+        (holder as WeatherViewHolder).bind(futureWeatherInfoList[position])
 
         // Space out among items
         val layoutParams = holder.itemView.layoutParams
@@ -48,7 +48,7 @@ class WeatherRecyclerViewAdapter(private val context: Context)
 
         @RequiresApi(Build.VERSION_CODES.O)
         @SuppressLint("SetTextI18n")
-        fun bind(position: ConsolidatedWeatherModel, context: Context) {
+        fun bind(position: ConsolidatedWeatherModel) {
             nextDay.text = position.applicableDate
             nextWeatherStatus.text = position.weatherStateName
             nextHighLow.text = position.maxTemp.toInt().toString() + "'c / " + position.minTemp.toInt().toString() + "'c"
