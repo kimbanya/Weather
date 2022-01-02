@@ -13,7 +13,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
 
     private val TAG = javaClass.simpleName
 
-    val weather = MutableLiveData<WeatherResponseModel>()
+    val weather = MutableLiveData<List<WeatherResponseModel>>()
     val numberOfCitiesSearched = MutableLiveData<Int>()
     var favoriteList: LiveData<List<CityInfo>> = repository.favoriteList
     var presentingListMerged = MutableLiveData<List<CityInfo>>()
@@ -21,8 +21,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
     init {
         if (favoriteList.value.isNullOrEmpty()) {
             Log.d(TAG, "[init] >> favoriteList is NULL" )
-        }
-        else {
+        } else {
             Log.d(TAG, "[init] >> favoriteList Size : ${favoriteList.value?.size}" )
             presentingListMerged.postValue(favoriteList.value)
         }
@@ -58,31 +57,37 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val response = repository.getCityWeatherByLattLong(lattLong)
+                val tempList = mutableListOf<WeatherResponseModel>()
 
                 if (response.isSuccessful) {
-                    Log.d(TAG, "[getWeatherByLattLong] result city : ${response.body()?.get(0)!!.title}")
-                    getWeather(response.body()?.get(0)!!.woeid)
+                    Log.d(TAG, "[getWeatherByLattLong] >> SUCCESS! current city : ${response.body()?.get(0)!!.title}")
+                    tempList.add(getWeather(response.body()?.get(0)!!.woeid)!!)
+                    favoriteList.value?.map {
+                        tempList.add(getWeather(it.woeid)!!)
+                    }
 
-                } else {
+                    weather.postValue(tempList)
+                }
+                else {
                     Log.d(TAG, "[Fail to getWeatherByLattLong]")
                 }
             }
         }
     }
 
-    private fun getWeather(woeid: Int) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val response = repository.getCityWeather(woeid)
+    private suspend fun getWeather(woeid: Int) : WeatherResponseModel? {
+        val response = repository.getCityWeather(woeid)
+        var tempResult: WeatherResponseModel? = null
 
-                if (response.isSuccessful) {
-                    Log.d(TAG, "[getCityWeather] result: ${response.body()}")
-                    weather.postValue(response.body())
-                } else {
-                    Log.d(TAG, "[Fail to getCityWeather]")
-                }
-            }
+        if (response.isSuccessful) {
+            Log.d(TAG, "[getCityWeather] >> SUCCESS response.body => ${response.body()}")
+            tempResult = response.body()!!
+
+        } else {
+            Log.d(TAG, "[getCityWeather] >> FAIL")
         }
+
+        return tempResult
     }
 
     fun getCities(cityName: String) {

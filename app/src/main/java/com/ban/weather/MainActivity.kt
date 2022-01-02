@@ -30,13 +30,15 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewAdapter: WeatherRecyclerViewAdapter
 
+    private var numberOfCities = -1
+
     // View Model
     private val mainViewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
 
     // Current Location
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
-    lateinit var mLastLocation: Location
-    internal lateinit var mLocationRequest: LocationRequest
+    private lateinit var mLastLocation: Location
+    private lateinit var mLocationRequest: LocationRequest
     private val REQUEST_PERMISSION_LOCATION = 10
 
 
@@ -115,9 +117,14 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun addObservers() {
         mainViewModel.weather.observe(this, {
-            Log.d(TAG, "[observe] ${it.title}")
-            updateTodayView(it)
-            updateRecyclerView(it.consolidatedWeather)
+            Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
+//            updateTodayView(it)
+//            updateRecyclerView(it.consolidatedWeather)
+        })
+
+        mainViewModel.favoriteList.observe(this, {
+            Log.d(TAG, "[observe] >> favoriteList, num of saved cities => ${it.size}")
+            numberOfCities = it.size
         })
     }
 
