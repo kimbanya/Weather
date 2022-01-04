@@ -18,7 +18,7 @@ class ScreenSlidePagerAdapter(fragmentActivity: FragmentActivity) : FragmentStat
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(data: ArrayList<WeatherFragment>) {
-        Log.d(TAG, "[updateData] >> ${data.size}")
+//        Log.d(TAG, "[updateData] >> ${data.size}")
 
         listWeatherFragment.addAll(data)
         notifyDataSetChanged()

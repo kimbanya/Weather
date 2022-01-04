@@ -84,17 +84,17 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     private fun addObservers() {
         viewModel.numberOfCitiesSearched.observe(this,{
-            Log.d(TAG, "[addObservers] >> numberOfCitiesSearched $it")
+//            Log.d(TAG, "[addObservers] >> numberOfCitiesSearched $it")
         })
 
         viewModel.favoriteList.observe(this, {
-            Log.d(TAG, "[addObservers] >> favoriteList ${it.size}")
+//            Log.d(TAG, "[addObservers] >> favoriteList ${it.size}")
             numberOfCitiesSaved = it.size
             updateRecyclerView(it)
         })
 
         viewModel.presentingListMerged.observe(this, {
-            Log.d(TAG, "[addObservers] >> presentingListMerged")
+//            Log.d(TAG, "[addObservers] >> presentingListMerged")
             updateRecyclerView(it)
         })
 
@@ -125,7 +125,7 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
     }
 
     override fun onItemClickListener(data: CityInfo) {
-        Log.d(TAG, "[onItemClickListner] >> ${data.cityName}, ${data.isFavorite}")
+//        Log.d(TAG, "[onItemClickListner] >> ${data.cityName}, ${data.isFavorite}")
 
         // save or delete process
         if (data.isFavorite) {

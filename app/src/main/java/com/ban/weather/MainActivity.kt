@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     private fun addObservers() {
         // Observer for Total City List for View Pager (Current Location + Saved Cities in DB)
         mainViewModel.weather.observe(this, {
-            Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
+//            Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
             it.map {
                 val fragment = WeatherFragment.newInstance(it)
                 listFragment.add(fragment)
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
 
         // Observer for Saved Cities in DB
         mainViewModel.favoriteList.observe(this, {
-            Log.d(TAG, "[observe] >> favoriteList, num of saved cities => ${it.size}")
+//            Log.d(TAG, "[observe] >> favoriteList, num of saved cities => ${it.size}")
             numberOfCities = it.size
         })
     }
@@ -193,7 +193,7 @@ class MainActivity : AppCompatActivity() {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocationUpdates()
             } else {
-                Log.d(TAG, "onRequestPermissionsResult")
+//                Log.d(TAG, "onRequestPermissionsResult")
             }
         }
     }

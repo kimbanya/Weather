@@ -20,9 +20,9 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
 
     init {
         if (favoriteList.value.isNullOrEmpty()) {
-            Log.d(TAG, "[init] >> favoriteList is NULL" )
+//            Log.d(TAG, "[init] >> favoriteList is NULL" )
         } else {
-            Log.d(TAG, "[init] >> favoriteList Size : ${favoriteList.value?.size}" )
+//            Log.d(TAG, "[init] >> favoriteList Size : ${favoriteList.value?.size}" )
             presentingListMerged.postValue(favoriteList.value)
         }
     }
@@ -41,12 +41,12 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                 val foundData = repository.findCityById(cityInfo.woeid)
                 if (foundData.isNotEmpty()) {
                     if (foundData[0].woeid == cityInfo.woeid) {
-                        Log.d(TAG, "[saveCity] : duplicated data ${cityInfo.cityName}")
+//                        Log.d(TAG, "[saveCity] : duplicated data ${cityInfo.cityName}")
                     }
                 }
                 if (foundData.isEmpty()) {
                     repository.insertCity(cityInfo)
-                    Log.d(TAG, "[saveCity] : save successful ${cityInfo.cityName}")
+//                    Log.d(TAG, "[saveCity] : save successful ${cityInfo.cityName}")
                 }
             }
         }
@@ -59,7 +59,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                 val tempList = mutableListOf<WeatherResponseModel>()
 
                 if (response.isSuccessful) {
-                    Log.d(TAG, "[getWeatherByLattLong] >> SUCCESS >> current city : ${response.body()?.get(0)!!.title}")
+//                    Log.d(TAG, "[getWeatherByLattLong] >> SUCCESS >> current city : ${response.body()?.get(0)!!.title}")
                     tempList.add(getWeather(response.body()?.get(0)!!.woeid)!!)
                     favoriteList.value?.map {
                         tempList.add(getWeather(it.woeid)!!)
@@ -68,7 +68,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                     weather.postValue(tempList)
                 }
                 else {
-                    Log.d(TAG, "[Fail to getWeatherByLattLong]")
+//                    Log.d(TAG, "[Fail to getWeatherByLattLong]")
                 }
             }
         }
@@ -79,10 +79,10 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
         var tempResult: WeatherResponseModel? = null
 
         if (response.isSuccessful) {
-            Log.d(TAG, "[getCityWeather] >> SUCCESS response.body => ${response.body()}")
+//            Log.d(TAG, "[getCityWeather] >> SUCCESS response.body => ${response.body()}")
             tempResult = response.body()!!
         } else {
-            Log.d(TAG, "[getCityWeather] >> FAIL")
+//            Log.d(TAG, "[getCityWeather] >> FAIL")
         }
 
         return tempResult
@@ -98,7 +98,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                 }
 
                 if (response.isSuccessful) {
-                    Log.d(TAG, "[getCities] : API response sucess")
+//                    Log.d(TAG, "[getCities] : API response sucess")
                     val tempList = mutableListOf<CityInfo>()
 
                     response.body()?.map {
@@ -121,7 +121,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                     numberOfCitiesSearched.postValue(list?.size)
 
                 } else {
-                    Log.d(TAG, "[Fail to getCities]")
+//                    Log.d(TAG, "[Fail to getCities]")
                 }
             }
         }
