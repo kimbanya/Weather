@@ -77,24 +77,21 @@ class MainActivity : AppCompatActivity() {
 
         // Add Progress Bar
         showProgress(true)
-        thread(start = true) {
-            Thread.sleep(5000)
-
-            runOnUiThread {
-                showProgress(false)
-            }
-        }
     }
 
     private fun showProgress(isShow: Boolean) {
+        val progressBar = binding.progressbar
+        val progressText = binding.progressText
+        val floatingActionButton = binding.fbaAddCityButton
+
         if (isShow) {
-            binding.progressbar.visibility = View.VISIBLE
-            binding.progressText.visibility = View.VISIBLE
-            binding.fbaAddCityButton.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+            progressText.visibility = View.VISIBLE
+            floatingActionButton.visibility = View.GONE
         } else {
-            binding.progressbar.visibility = View.GONE
-            binding.progressText.visibility = View.GONE
-            binding.fbaAddCityButton.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+            progressText.visibility = View.GONE
+            floatingActionButton.visibility = View.VISIBLE
         }
     }
 
@@ -108,6 +105,7 @@ class MainActivity : AppCompatActivity() {
                 listFragment.add(fragment)
             }
             viewPagerAdapter.updateData(listFragment)
+            showProgress(false)
         })
 
         // Observer for Saved Cities in DB
