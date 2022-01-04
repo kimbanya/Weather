@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,8 @@ import com.ban.weather.databinding.ActivityMainBinding
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
 import com.google.android.gms.location.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,6 +84,29 @@ class MainActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+
+        showProgress(true)
+        thread(start = true) {
+            Thread.sleep(5000)
+
+            runOnUiThread {
+                showProgress(false)
+            }
+        }
+    }
+
+    private fun showProgress(isShow: Boolean) {
+        if (isShow) {
+            binding.progressbar.visibility = View.VISIBLE
+            binding.progressText.visibility = View.VISIBLE
+            binding.fbaAddCityButton.visibility = View.GONE
+        } else {
+            binding.progressbar.visibility = View.GONE
+            binding.progressText.visibility = View.GONE
+            binding.fbaAddCityButton.visibility = View.VISIBLE
+
+        }
+
     }
 
     private fun startLocationUpdates() {
