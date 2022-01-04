@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
                 it.map {
                     val fragment = WeatherFragment.newInstance(it)
-                    listFragment.plus(fragment)
+                    listFragment.add(fragment)
                 }
                 viewPagerAdapter.updateData(listFragment)
 //            updateTodayView(it)

@@ -26,12 +26,12 @@ class WeatherFragment : Fragment() {
 
     private lateinit var recyclerViewAdapter: WeatherRecyclerViewAdapter
 
-    private var param1: WeatherResponseModel? = null
+    private lateinit var param1: WeatherResponseModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getParcelable(ARG_PARAM1)
+            param1 = it.getParcelable(ARG_PARAM1)!!
         }
     }
 
