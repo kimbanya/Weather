@@ -63,12 +63,24 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
         initRecycler()
     }
 
+    /*
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.home -> finish()
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
+    */
 
     private fun addObservers() {
         viewModel.numberOfCitiesSearched.observe(this,{

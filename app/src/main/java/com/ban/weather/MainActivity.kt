@@ -1,6 +1,7 @@
 package com.ban.weather
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -73,11 +75,23 @@ class MainActivity : AppCompatActivity() {
                 putExtra("test", "TEST MESSAGE using Intent")
             }
             startActivity(intent)
+//            val intent = Intent(this, SearchActivity::class.java)
+//            resultLauncher.launch(intent)
         }
 
         // Add Progress Bar
         showProgress(true)
     }
+
+    /*
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val myData: Intent? = result.data
+            val stringData = myData?.getStringExtra("dataName")
+            val stringData2 = result.data?.getStringExtra("dataName")
+        }
+    }
+     */
 
     private fun showProgress(isShow: Boolean) {
         val progressBar = binding.progressbar
