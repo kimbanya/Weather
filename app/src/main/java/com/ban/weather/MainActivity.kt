@@ -1,7 +1,6 @@
 package com.ban.weather
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,19 +9,15 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.ban.weather.adapters.ScreenSlidePagerAdapter
 import com.ban.weather.databinding.ActivityMainBinding
-import com.ban.weather.models.ConsolidatedWeatherModel
-import com.ban.weather.models.WeatherResponseModel
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
-import com.bumptech.glide.Glide
 import com.google.android.gms.location.*
 
 class MainActivity : AppCompatActivity() {

@@ -1,15 +1,18 @@
-package com.ban.weather
+package com.ban.weather.adapters
 
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.ban.weather.ItemClickListener
+import com.ban.weather.R
 import com.ban.weather.databinding.ItemSearchBinding
 import com.ban.weather.models.CityInfo
 
 class SearchRecyclerViewAdapter(
-    private val context: Context, val itemClickListener: ItemClickListener)
+    private val context: Context, val itemClickListener: ItemClickListener
+)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG = javaClass.simpleName

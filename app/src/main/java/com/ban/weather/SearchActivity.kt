@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ban.weather.adapters.SearchRecyclerViewAdapter
 import com.ban.weather.databinding.ActivitySearchBinding
 import com.ban.weather.models.CityInfo
 import com.ban.weather.view_models.MainViewModel

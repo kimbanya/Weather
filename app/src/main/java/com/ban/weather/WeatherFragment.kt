@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ban.weather.adapters.WeatherRecyclerViewAdapter
 import com.ban.weather.databinding.FragmentWeatherBinding
 import com.ban.weather.models.ConsolidatedWeatherModel
 import com.ban.weather.models.WeatherResponseModel
