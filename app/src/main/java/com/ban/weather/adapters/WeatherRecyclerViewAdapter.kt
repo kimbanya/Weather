@@ -49,7 +49,7 @@ class WeatherRecyclerViewAdapter(private val context: WeatherFragment)
         fun bind(position: ConsolidatedWeatherModel) {
             nextDay.text = position.applicableDate
             nextWeatherStatus.text = position.weatherStateName
-            nextHighLow.text = position.maxTemp.toInt().toString() + "'c / " + position.minTemp.toInt().toString() + "'c"
+            nextHighLow.text = position.maxTemp.toInt().toString() + "°C / " + position.minTemp.toInt().toString() + "°C"
             val tomorrowWeatherAbbrString = position.weatherStateAbbr
             setImageResource(nextWeatherIcon, tomorrowWeatherAbbrString)
         }

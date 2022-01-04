@@ -96,8 +96,8 @@
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
-            android:text="day"
+            android:text="Day"
+            android:layout_marginLeft="30dp"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -106,9 +106,9 @@
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="weather"
+            android:text="Weather"
             android:textSize="17sp"
-            android:gravity="center"
+            android:layout_marginLeft="20dp"
             android:textStyle="bold" />
 
         <TextView
@@ -118,7 +118,7 @@
             android:layout_weight="1"
             android:gravity="right"
             android:textSize="17sp"
-            android:text="high/low"
+            android:text="High/Low"
             android:textStyle="bold" />
 
     </LinearLayout>

@@ -69,10 +69,10 @@ class WeatherFragment : Fragment() {
         setImageResource(weatherIcon, weatherAbbrString)
 
         title.text = result!!.title
-        theTemp.text = "Temperature : ${todayWeather.theTemp.toInt()}'"
-        weatherState.text = "Weather: ${todayWeather.weatherStateName}"
-        maxTemp.text = "High temp : ${todayWeather.maxTemp.toInt()}'"
-        minTemp.text = "Low temp : ${todayWeather.minTemp.toInt()}'"
+        theTemp.text = "Current: ${todayWeather.theTemp.toInt()}°C"
+        weatherState.text = "${todayWeather.weatherStateName}"
+        maxTemp.text = "High: ${todayWeather.maxTemp.toInt()}°C"
+        minTemp.text = "Low: ${todayWeather.minTemp.toInt()}°C"
     }
 
     private fun setImageResource(imageView: ImageView, category:String?) {
