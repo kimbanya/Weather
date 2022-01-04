@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     // View Pager
     private lateinit var viewPager: ViewPager2
     private lateinit var viewPagerAdapter: ScreenSlidePagerAdapter
-    private lateinit var listFragment: List<WeatherFragment>
+    private var listFragment : ArrayList<WeatherFragment> = ArrayList()
 
     // Current Location
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         // Add View Pager Adapter
         viewPager = binding.pager
         viewPagerAdapter = ScreenSlidePagerAdapter(this)
-        if (this::viewPager.isInitialized) {
+        if (::viewPager.isInitialized) {
             viewPager.adapter = viewPagerAdapter
         }
 
@@ -116,13 +116,11 @@ class MainActivity : AppCompatActivity() {
     private fun addObservers() {
         mainViewModel.weather.observe(this, {
             Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
-            if (this::listFragment.isInitialized) {
                 it.map {
                     val fragment = WeatherFragment.newInstance(it)
                     listFragment.plus(fragment)
                 }
                 viewPagerAdapter.updateData(listFragment)
-            }
 //            updateTodayView(it)
 //            updateRecyclerView(it.consolidatedWeather)
         })

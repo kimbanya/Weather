@@ -8,15 +8,19 @@ class ScreenSlidePagerAdapter(fragmentActivity: FragmentActivity) : FragmentStat
 
     private val TAG = javaClass.simpleName
 
-//    private lateinit var listFragment : List<WeatherFragment>
-    var listWeatherFragment : ArrayList<WeatherFragment> = ArrayList()
+    private var listWeatherFragment : ArrayList<WeatherFragment> = ArrayList()
+//    private lateinit var listWeatherFragment : List<WeatherFragment>
 
-    override fun getItemCount() : Int {
-        return listWeatherFragment.size
-    }
+    override fun getItemCount() : Int = listWeatherFragment.size
 
     override fun createFragment(position: Int): WeatherFragment = listWeatherFragment[position]
 
+    fun updateData(data: ArrayList<WeatherFragment>) {
+        Log.d(TAG, "[updateData] >> ${data.size}")
+        listWeatherFragment.addAll(data)
+    }
+
+    /*
     fun addFragment(fragment: WeatherFragment) {
         listWeatherFragment.add(fragment)
         notifyItemInserted(listWeatherFragment.size-1)
@@ -26,9 +30,6 @@ class ScreenSlidePagerAdapter(fragmentActivity: FragmentActivity) : FragmentStat
         listWeatherFragment.removeLast()
         notifyItemRemoved(listWeatherFragment.size)
     }
+     */
 
-    fun updateData(data: List<WeatherFragment>) {
-        Log.d(TAG, "[updateData] >> ${data.size}")
-        listWeatherFragment = data as ArrayList<WeatherFragment>
-    }
 }

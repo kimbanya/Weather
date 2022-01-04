@@ -32,20 +32,19 @@ class WeatherFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getParcelable(ARG_PARAM1)
-
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentWeatherBinding.inflate(inflater, container, false)
-        return binding.root
 
         // recycler view
         recyclerView()
+        updateTodayView(param1)
+        updateRecyclerView(param1?.consolidatedWeather!!)
 
-        // view
-
-
+        return binding.root
     }
 
     companion object {
