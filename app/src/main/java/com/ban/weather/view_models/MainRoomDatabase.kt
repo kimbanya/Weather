@@ -29,14 +29,7 @@ abstract class MainRoomDatabase : RoomDatabase() {
                 INSTANCE = instance
                 return instance
             }
-
         }
-
     }
-
-
-
-
-
 
 }

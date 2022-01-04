@@ -1,18 +1,17 @@
 package com.ban.weather.models
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
 
 @Parcelize
 data class SearchCityResponseModel(
     val title : String,
     val woeid : Int,
+
     @SerializedName("latt_long")
     val lattLong : String,
+
     @SerializedName("location_type")
     val locationType : String
 ) : Parcelable
@@ -49,52 +48,6 @@ data class WeatherResponseModel(
 
     val timezone: String
 ) : Parcelable
-/*
-{
-    constructor(parcel: Parcel) : this(
-        TODO("consolidatedWeather"),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        TODO("parent"),
-        TODO("sources"),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readInt(),
-        parcel.readString().toString(),
-        parcel.readString().toString()
-    ) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(time)
-        parcel.writeString(sunRise)
-        parcel.writeString(sunSet)
-        parcel.writeString(timezoneName)
-        parcel.writeString(title)
-        parcel.writeString(locationType)
-        parcel.writeInt(woeid)
-        parcel.writeString(lattLong)
-        parcel.writeString(timezone)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<WeatherResponseModel> {
-        override fun createFromParcel(parcel: Parcel): WeatherResponseModel {
-            return WeatherResponseModel(parcel)
-        }
-
-        override fun newArray(size: Int): Array<WeatherResponseModel?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
-
- */
 
 @Parcelize
 data class ConsolidatedWeatherModel(
@@ -149,7 +102,6 @@ data class Parent(
 
     @SerializedName("latt_long")
     val lattLong: String
-
 ) : Parcelable
 
 @Parcelize
@@ -160,5 +112,4 @@ data class Source(
 
     @SerializedName("crawl_rate")
     val crawlRate: Long
-
 ) : Parcelable

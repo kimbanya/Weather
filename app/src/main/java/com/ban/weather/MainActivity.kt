@@ -20,7 +20,6 @@ import com.ban.weather.databinding.ActivityMainBinding
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
 import com.google.android.gms.location.*
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
 
+    // The number of cities saved in DB
     private var numberOfCities = -1
 
     // View Model
@@ -37,14 +37,14 @@ class MainActivity : AppCompatActivity() {
     // View Pager
     private lateinit var viewPager: ViewPager2
     private lateinit var viewPagerAdapter: ScreenSlidePagerAdapter
+
+    // List Fragments for View Pager Adapter
     private var listFragment : ArrayList<WeatherFragment> = ArrayList()
 
     // Current Location
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
-//    private lateinit var mLastLocation: Location
     private lateinit var mLocationRequest: LocationRequest
     private val REQUEST_PERMISSION_LOCATION = 10
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,19 +54,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Request Current Location
-        mLocationRequest =  LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-        if (requestGpsPermission(this)) {
-            startLocationUpdates()
-        }
-
+        requestCurrentLocation()
         initView()
         addObservers()
-//        recyclerView()
-
     }
 
     private fun initView() {
@@ -85,6 +75,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Add Progress Bar
         showProgress(true)
         thread(start = true) {
             Thread.sleep(5000)
@@ -104,9 +95,45 @@ class MainActivity : AppCompatActivity() {
             binding.progressbar.visibility = View.GONE
             binding.progressText.visibility = View.GONE
             binding.fbaAddCityButton.visibility = View.VISIBLE
+        }
+    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun addObservers() {
+        // Observer for Total City List for View Pager (Current Location + Saved Cities in DB)
+        mainViewModel.weather.observe(this, {
+            Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
+            it.map {
+                val fragment = WeatherFragment.newInstance(it)
+                listFragment.add(fragment)
+            }
+            viewPagerAdapter.updateData(listFragment)
+        })
+
+        // Observer for Saved Cities in DB
+        mainViewModel.favoriteList.observe(this, {
+            Log.d(TAG, "[observe] >> favoriteList, num of saved cities => ${it.size}")
+            numberOfCities = it.size
+        })
+    }
+
+    override fun onBackPressed() {
+        if (viewPager.currentItem == 0) {
+            super.onBackPressed()
+        } else {
+            viewPager.currentItem -= 1
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun requestCurrentLocation() {
+        mLocationRequest =  LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
+        if (requestGpsPermission(this)) {
+            startLocationUpdates()
+        }
     }
 
     private fun startLocationUpdates() {
@@ -130,37 +157,8 @@ class MainActivity : AppCompatActivity() {
         val longitude = Math.round(location.longitude.toFloat() * 1000) / 1000f
         val lattLongQueryString = "$latitude,$longitude"
 
+        // Request the Weather of Current Location with Lattitude and Longitude
         mainViewModel.getWeatherByLattLong(lattLongQueryString)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun addObservers() {
-        mainViewModel.weather.observe(this, {
-            Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
-                it.map {
-                    val fragment = WeatherFragment.newInstance(it)
-                    listFragment.add(fragment)
-                }
-                viewPagerAdapter.updateData(listFragment)
-//            updateTodayView(it)
-//            updateRecyclerView(it.consolidatedWeather)
-        })
-
-        mainViewModel.favoriteList.observe(this, {
-            Log.d(TAG, "[observe] >> favoriteList, num of saved cities => ${it.size}")
-            numberOfCities = it.size
-        })
-    }
-
-    override fun onBackPressed() {
-        if (viewPager.currentItem == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed()
-        } else {
-            // Otherwise, select the previous step.
-            viewPager.currentItem = viewPager.currentItem - 1
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -187,8 +185,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
 
 }
 

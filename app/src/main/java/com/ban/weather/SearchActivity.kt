@@ -30,7 +30,6 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     private val viewModel : MainViewModel by viewModels { MainViewModelFactory((application as WeatherApplication).repository) }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,33 +48,32 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
             var handled = false
 
             if(action == EditorInfo.IME_ACTION_SEARCH) {
-                    hideSoftKeyboard()
+                hideSoftKeyboard()
                 editText.clearFocus()
                 editText.isCursorVisible = false
-                    searchCities(editText.text.toString())
-                    handled = true
-                }
-                handled
+                searchCities(editText.text.toString())
+                handled = true
             }
+            handled
+        }
 
         addObservers()
         initRecycler()
-
     }
 
     private fun addObservers() {
         viewModel.numberOfCitiesSearched.observe(this,{
-            Log.d(TAG, "[addObservers] : the number of cities searched => $it")
+            Log.d(TAG, "[addObservers] >> numberOfCitiesSearched $it")
         })
 
         viewModel.favoriteList.observe(this, {
-            Log.d(TAG, "[addObservers] : saved cities on DB => ${it.size}")
+            Log.d(TAG, "[addObservers] >> favoriteList ${it.size}")
             numberOfCitiesSaved = it.size
             updateRecyclerView(it)
         })
 
         viewModel.presentingListMerged.observe(this, {
-            Log.d(TAG, "[observe]")
+            Log.d(TAG, "[addObservers] >> presentingListMerged")
             updateRecyclerView(it)
         })
 
@@ -87,7 +85,6 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initRecycler() {
-        Log.d(TAG, "[initRecycler]")
         recyclerViewAdapter = SearchRecyclerViewAdapter(this, this)
         binding.rvSearchedCityList.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
@@ -98,11 +95,6 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
 
     private fun searchCities(cityName: String) {
         viewModel.getCities(cityName)
-    }
-
-    private fun hideKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     fun Activity.hideSoftKeyboard(){

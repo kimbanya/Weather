@@ -31,7 +31,6 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.deleteCity(woeid)
-                Log.d(TAG, "[deleteCity]")
             }
         }
     }
@@ -60,7 +59,7 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                 val tempList = mutableListOf<WeatherResponseModel>()
 
                 if (response.isSuccessful) {
-                    Log.d(TAG, "[getWeatherByLattLong] >> SUCCESS! current city : ${response.body()?.get(0)!!.title}")
+                    Log.d(TAG, "[getWeatherByLattLong] >> SUCCESS >> current city : ${response.body()?.get(0)!!.title}")
                     tempList.add(getWeather(response.body()?.get(0)!!.woeid)!!)
                     favoriteList.value?.map {
                         tempList.add(getWeather(it.woeid)!!)
@@ -82,7 +81,6 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
         if (response.isSuccessful) {
             Log.d(TAG, "[getCityWeather] >> SUCCESS response.body => ${response.body()}")
             tempResult = response.body()!!
-
         } else {
             Log.d(TAG, "[getCityWeather] >> FAIL")
         }
@@ -111,18 +109,12 @@ class MainViewModel @ViewModelInject constructor(private val repository: MainRep
                             if (i.woeid == it.woeid) {
                                 isFavorited = true
                                 break
-                                // Log.d(TAG, "i : ${i.woeid}, it : ${it.woeid}")
-                                }
                             }
-                        tempCityInfo = CityInfo(
-                            woeid = it.woeid,
-                            cityName = it.title,
-                            isFavorite = isFavorited
-                        )
+                        }
 
+                        tempCityInfo = CityInfo(woeid = it.woeid, cityName = it.title, isFavorite = isFavorited)
                         tempList.add(tempCityInfo)
                     }
-
                     presentingListMerged.postValue(tempList)
 
                     val list = response.body()

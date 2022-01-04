@@ -15,19 +15,18 @@ import retrofit2.http.Query
 interface ApiInterface {
 
     companion object {
-
         var BASE_URL = "https://www.metaweather.com/api/"
 
         fun create(): ApiInterface {
-
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(builderHttpClient())
+//                .client(builderHttpClient())
                 .baseUrl(BASE_URL)
                 .build()
             return retrofit.create(ApiInterface::class.java)
         }
 
+        // HttpLogging
         private fun builderHttpClient() : OkHttpClient {
             val client = OkHttpClient.Builder()
             if (BuildConfig.DEBUG) {
@@ -37,7 +36,6 @@ interface ApiInterface {
             }
             return client.build()
         }
-
     }
 
     @GET("location/{woeid}")

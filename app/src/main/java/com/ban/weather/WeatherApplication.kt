@@ -6,6 +6,6 @@ import com.ban.weather.view_models.MainRoomDatabase
 
 class WeatherApplication : Application() {
 
-    val database by lazy { MainRoomDatabase.getDatabase(this) }
+    private val database by lazy { MainRoomDatabase.getDatabase(this) }
     val repository by lazy { MainRepository(database.mainDao()) }
 }
