@@ -4,6 +4,7 @@ import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -58,29 +59,27 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
             }
             handled
         }
-
         addObservers()
         initRecycler()
     }
 
-    /*
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.home -> {
-                onBackPressed()
-                return true
+                Log.d(TAG, "onOptionsItemSelected")
+                val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("updated", false)
+                setResult(Activity.RESULT_CANCELED)
+                finish()
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.home -> finish()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-    */
+//    override fun onBackPressed() {
+//        setResult(RESULT_CANCELED)
+//        finish()
+//    }
 
     private fun addObservers() {
         viewModel.numberOfCitiesSearched.observe(this,{

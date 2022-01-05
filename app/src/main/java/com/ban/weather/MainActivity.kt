@@ -11,7 +11,10 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -70,28 +73,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Move to a Acticity of Search City
-        binding.fbaAddCityButton.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java).apply {
-                putExtra("test", "TEST MESSAGE using Intent")
-            }
-            startActivity(intent)
-//            val intent = Intent(this, SearchActivity::class.java)
-//            resultLauncher.launch(intent)
-        }
+        binding.fbaAddCityButton.setOnClickListener { openSearchActivityForResult() }
 
         // Add Progress Bar
         showProgress(true)
     }
 
-    /*
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result : ActivityResult ->
+        Log.d(TAG, "[registerForActivityResult] result.resultCode: ${result.resultCode} / Activity.RESULT_OK: ${Activity.RESULT_OK}")
+
         if (result.resultCode == Activity.RESULT_OK) {
-            val myData: Intent? = result.data
-            val stringData = myData?.getStringExtra("dataName")
-            val stringData2 = result.data?.getStringExtra("dataName")
+            val data: Intent? = result.data
+            val stringData = data?.getStringExtra("updated")
+//            Log.d(TAG, "IF RESULT_OK")
+        }
+        if (result.resultCode == Activity.RESULT_CANCELED) {
+            val data: Intent? = result.data
+            val stringData = data?.getStringExtra("updated")
+//            Log.d(TAG, "IF RESULT_CANCELED")
         }
     }
-     */
+
+    private fun openSearchActivityForResult() {
+        resultLauncher.launch(Intent(this, SearchActivity::class.java))
+    }
 
     private fun showProgress(isShow: Boolean) {
         val progressBar = binding.progressbar
