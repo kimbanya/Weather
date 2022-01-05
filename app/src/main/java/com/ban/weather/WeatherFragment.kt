@@ -3,19 +3,17 @@ package com.ban.weather
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ban.weather.adapters.WeatherRecyclerViewAdapter
 import com.ban.weather.databinding.FragmentWeatherBinding
 import com.ban.weather.models.ConsolidatedWeatherModel
 import com.ban.weather.models.WeatherResponseModel
-import com.bumptech.glide.Glide
 
 private const val mKEY = "WeatherFragment"
 

@@ -1,7 +1,6 @@
 package com.ban.weather
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,12 +8,7 @@ import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.View
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.registerForActivityResult
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +19,6 @@ import com.ban.weather.databinding.ActivityMainBinding
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
 import com.google.android.gms.location.*
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 

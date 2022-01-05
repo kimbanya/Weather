@@ -1,7 +1,6 @@
 package com.ban.weather.adapters
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ban.weather.WeatherFragment
