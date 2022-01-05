@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = javaClass.simpleName
 
+    private var currentLattLong = ""
+
     private lateinit var binding : ActivityMainBinding
 
     // The number of cities saved in DB
@@ -64,6 +66,13 @@ class MainActivity : AppCompatActivity() {
         addObservers()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onResume() {
+        super.onResume()
+//        requestCurrentLocation()
+        mainViewModel.getWeatherByLattLong(currentLattLong)
+    }
+
     private fun initView() {
         // Add View Pager Adapter
         viewPager = binding.pager
@@ -73,29 +82,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Move to a Acticity of Search City
-        binding.fbaAddCityButton.setOnClickListener { openSearchActivityForResult() }
+        binding.fbaAddCityButton.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
 
         // Add Progress Bar
         showProgress(true)
-    }
-
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result : ActivityResult ->
-        Log.d(TAG, "[registerForActivityResult] result.resultCode: ${result.resultCode} / Activity.RESULT_OK: ${Activity.RESULT_OK}")
-
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            val stringData = data?.getStringExtra("updated")
-//            Log.d(TAG, "IF RESULT_OK")
-        }
-        if (result.resultCode == Activity.RESULT_CANCELED) {
-            val data: Intent? = result.data
-            val stringData = data?.getStringExtra("updated")
-//            Log.d(TAG, "IF RESULT_CANCELED")
-        }
-    }
-
-    private fun openSearchActivityForResult() {
-        resultLauncher.launch(Intent(this, SearchActivity::class.java))
     }
 
     private fun showProgress(isShow: Boolean) {
@@ -173,7 +165,7 @@ class MainActivity : AppCompatActivity() {
         val latitude = Math.round(location.latitude.toFloat() * 1000) / 1000f
         val longitude = Math.round(location.longitude.toFloat() * 1000) / 1000f
         val lattLongQueryString = "$latitude,$longitude"
-
+        currentLattLong = lattLongQueryString
         // Request the Weather of Current Location with Lattitude and Longitude
         mainViewModel.getWeatherByLattLong(lattLongQueryString)
     }

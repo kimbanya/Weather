@@ -63,24 +63,6 @@ class SearchActivity : AppCompatActivity(), ItemClickListener {
         initRecycler()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.home -> {
-                Log.d(TAG, "onOptionsItemSelected")
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("updated", false)
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-//    override fun onBackPressed() {
-//        setResult(RESULT_CANCELED)
-//        finish()
-//    }
-
     private fun addObservers() {
         viewModel.numberOfCitiesSearched.observe(this,{
 //            Log.d(TAG, "[addObservers] >> numberOfCitiesSearched $it")
