@@ -8,17 +8,28 @@
 
     <!--    title of location or city starts -->
     <TextView
+        android:id="@+id/tv_current_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="5dp"
+        android:text=""
+        android:textAlignment="center" />
+
+    <TextView
         android:id="@+id/tv_location_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:text="Location"
         android:textAlignment="center"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tv_current_location"/>
     <!--    title of location or city ends -->
 
     <!--    container of today weather starts -->

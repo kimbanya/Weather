@@ -54,7 +54,6 @@ class WeatherFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun updateTodayView(result: WeatherResponseModel?) {
         val todayWeather = result!!.consolidatedWeather[0]
         val title = binding.tvLocationTitle
