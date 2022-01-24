@@ -29,6 +29,10 @@
             android:parentActivityName=".MainActivity"
             android:exported="true">
         </activity>
+        <service
+            android:name=".WeatherApplication"
+            android:foregroundServiceType="location">
+        </service>
     </application>
 
 </manifest>
