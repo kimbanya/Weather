@@ -10,13 +10,16 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.ban.weather.adapters.ScreenSlidePagerAdapter
 import com.ban.weather.databinding.ActivityMainBinding
@@ -49,7 +52,10 @@ class MainActivity : AppCompatActivity() {
     // Current Location
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
     private lateinit var mLocationRequest: LocationRequest
-    private val REQUEST_PERMISSION_LOCATION = 10
+
+    companion object {
+        const val REQUEST_PERMISSION_LOCATION = 10
+    }
 
     // Network Status
 //    private lateinit var networkConnectionStateMonitor : NetworkConnectionStateMonitor
@@ -74,10 +80,73 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.finishAffinity(this)
             exitProcess(0)
         }
-        requestCurrentLocation()
+
+        // Process response of permit
+        val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+                isGranted: Boolean ->
+            if (isGranted) {
+                Log.d(TAG, "requestPermissionLauncher >> GRANTED")
+                startLocationUpdates()
+            } else {
+                Log.d(TAG, "requestPermissionLauncher >> ELSE")
+                showSampleCityWeather()
+            }
+        }
+
+        when {
+            // Already Access
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED -> {
+                Log.d(TAG, "checkSelfPermission >> FINE_GRANTED")
+                startLocationUpdates()
+            }
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED -> {
+                Log.d(TAG, "checkSelfPermission >> COARSE_GRANTED")
+                startLocationUpdates()
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                Log.d(TAG, "shouldShowRequestPermissionRationale")
+//            showInContextUI()
+            }
+            else -> {
+                // First Access
+                Log.d(TAG, "requestPermissionLauncher")
+//                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_LOCATION)
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) // ask for upgrading access
+            }
+        }
+
+//        requestCurrentLocation()
         initView()
         addObservers()
     }
+
+    /*
+    // Once user responsed to permit or not, onRequestPermissionsResult is called
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            REQUEST_PERMISSION_LOCATION -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Log.d(TAG, "onRequestPermissionsResult >> GRANTED")
+                    startLocationUpdates()
+                } else {
+                    Log.d(TAG, "onRequestPermissionsResult >> Permit Denied 1")
+                    showSampleCityWeather()
+                }
+                return
+            }
+            else -> {
+                // Ignore all other requests.
+                Log.d(TAG, "onRequestPermissionsResult >> Permit Denied 2")
+                showSampleCityWeather()
+            }
+        }
+    }
+     */
 
     private fun isNetworkAvailable(context: Context) : Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -166,18 +235,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun requestCurrentLocation() {
+    private fun startLocationUpdates() {
         mLocationRequest =  LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
-
-        if (requestGpsPermission(this)) {
-            startLocationUpdates()
-        }
-    }
-
-    private fun startLocationUpdates() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -202,32 +263,13 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getWeatherByLattLong(lattLongQueryString)
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun requestGpsPermission(context: Context) : Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                true
-            } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_LOCATION)
-                false
-            }
-        } else {
-            true
-        }
+    private fun showSampleCityWeather() {
+        // show this when location permit denied
+        val sampleCityLattLong = "37.777119, -122.41964"
+        mainViewModel.getWeatherByLattLong(sampleCityLattLong)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_PERMISSION_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationUpdates()
-            } else {
-//                Log.d(TAG, "onRequestPermissionsResult")
-            }
-        }
-    }
-
-//    override fun onDestroy() {
+    //    override fun onDestroy() {
 //        super.onDestroy()
 //        networkConnectionStateMonitor.unregister()
 //    }
