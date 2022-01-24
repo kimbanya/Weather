@@ -5,10 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.view.Gravity
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +23,7 @@ import com.ban.weather.databinding.ActivityMainBinding
 import com.ban.weather.view_models.MainViewModel
 import com.ban.weather.view_models.MainViewModelFactory
 import com.google.android.gms.location.*
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,6 +51,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mLocationRequest: LocationRequest
     private val REQUEST_PERMISSION_LOCATION = 10
 
+    // Network Status
+//    private lateinit var networkConnectionStateMonitor : NetworkConnectionStateMonitor
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +62,40 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Register network status
+//        networkConnectionStateMonitor = NetworkConnectionStateMonitor(this)
+//        networkConnectionStateMonitor.register()
+
+        if(!isNetworkAvailable(this)){
+            val toast = Toast.makeText(this, "Check Network Connection \r\nApp is closing", Toast.LENGTH_LONG)
+            toast.setGravity(Gravity.CENTER, Gravity.CENTER_HORIZONTAL, Gravity.CENTER_VERTICAL)
+            toast.show()
+
+            ActivityCompat.finishAffinity(this)
+            exitProcess(0)
+        }
         requestCurrentLocation()
         initView()
         addObservers()
+    }
+
+    private fun isNetworkAvailable(context: Context) : Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val activeNetwork      = connectivityManager.activeNetwork ?: return false
+            val networkCapability = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+
+            return when {
+                networkCapability.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                networkCapability.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                networkCapability.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                networkCapability.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+                else -> false
+            }
+        } else {
+            return connectivityManager.activeNetworkInfo?.isConnected ?: false
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -187,6 +226,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        networkConnectionStateMonitor.unregister()
+//    }
 
 }
 
