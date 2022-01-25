@@ -228,7 +228,6 @@ class MainActivity : AppCompatActivity() {
                 val fragment = WeatherFragment.newInstance(it)
                 listFragment.add(fragment)
             }
-            FragmentManager.findFragmentByTag("")
 
             viewPagerAdapter.updateData(listFragment)
             showProgress(false)
