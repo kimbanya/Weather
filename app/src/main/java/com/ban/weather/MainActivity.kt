@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.ban.weather.adapters.ScreenSlidePagerAdapter
 import com.ban.weather.databinding.ActivityMainBinding
@@ -86,10 +87,18 @@ class MainActivity : AppCompatActivity() {
                 isGranted: Boolean ->
             if (isGranted) {
                 Log.d(TAG, "requestPermissionLauncher >> GRANTED")
-                startLocationUpdates()
+                startLocationUpdates() // only fine location comes in
             } else {
                 Log.d(TAG, "requestPermissionLauncher >> ELSE")
-                showSampleCityWeather()
+                if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "[permssion coarse granted] > do somethign here")
+                    showCoarseLocationExample()
+                }
+                else {
+                    showSampleCityWeather()
+                    Log.d(TAG, "[permssion coarse NOT] > do somethign here")
+                }
+
             }
         }
 
@@ -108,13 +117,16 @@ class MainActivity : AppCompatActivity() {
 
             ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION) -> {
                 Log.d(TAG, "shouldShowRequestPermissionRationale")
+                Toast.makeText(this, "should make UI, showing requesst permission rationale", Toast.LENGTH_LONG).show()
 //            showInContextUI()
             }
             else -> {
                 // First Access
                 Log.d(TAG, "requestPermissionLauncher")
 //                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_LOCATION)
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) // ask for upgrading access
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) // ask for upgrading access,,,, coarse location ?
+
+
             }
         }
 
@@ -216,6 +228,8 @@ class MainActivity : AppCompatActivity() {
                 val fragment = WeatherFragment.newInstance(it)
                 listFragment.add(fragment)
             }
+            FragmentManager.findFragmentByTag("")
+
             viewPagerAdapter.updateData(listFragment)
             showProgress(false)
         })
@@ -266,6 +280,11 @@ class MainActivity : AppCompatActivity() {
     private fun showSampleCityWeather() {
         // show this when location permit denied
         val sampleCityLattLong = "37.777119, -122.41964"
+        mainViewModel.getWeatherByLattLong(sampleCityLattLong)
+    }
+    private fun showCoarseLocationExample() {
+    // show this when location permit
+        val sampleCityLattLong = "35.6804, 139.7690"
         mainViewModel.getWeatherByLattLong(sampleCityLattLong)
     }
 
