@@ -20,7 +20,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.ban.weather.adapters.ScreenSlidePagerAdapter
 import com.ban.weather.databinding.ActivityMainBinding
@@ -117,7 +116,8 @@ class MainActivity : AppCompatActivity() {
 
             ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION) -> {
                 Log.d(TAG, "shouldShowRequestPermissionRationale")
-                Toast.makeText(this, "should make UI, showing requesst permission rationale", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Sinse location permission is denied, Show the sample city's weather", Toast.LENGTH_LONG).show()
+                showSampleCityWeather()
 //            showInContextUI()
             }
             else -> {
@@ -222,7 +222,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun addObservers() {
         // Observer for Total City List for View Pager (Current Location + Saved Cities in DB)
-        mainViewModel.weather.observe(this, {
+        mainViewModel.weather.observe(this, { it ->
 //            Log.d(TAG, "[observe] >> weather, num of cities to be sent to view pager ${it.size}")
             it.map {
                 val fragment = WeatherFragment.newInstance(it)
